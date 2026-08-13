@@ -1,0 +1,33 @@
+name: Train Models (Stage 1)
+
+# Manual trigger only -- this is the RARE, expensive job (run once now, then
+# once per year when a season completes and should be folded into training).
+# Not scheduled, unlike update.yml.
+on:
+  workflow_dispatch:
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run training script
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: python train_models.py
+
+      - name: Commit trained models back to the repo
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Retrain models (Stage 1)"
+          file_pattern: "models/**"
