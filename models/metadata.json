@@ -1,0 +1,175 @@
+{
+  "trained_on_seasons": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "test_season_used_for_validation": 2025,
+  "trained_at": "2026-08-14 00:36:35 UTC",
+  "feature_cols_gen2": [
+    "gen1_pred",
+    "home_offense_successRate",
+    "home_defense_successRate",
+    "home_offense_explosiveness",
+    "home_defense_explosiveness",
+    "home_offense_powerSuccess",
+    "home_defense_powerSuccess",
+    "home_offense_stuffRate",
+    "home_defense_stuffRate",
+    "home_offense_lineYards",
+    "home_defense_lineYards",
+    "home_offense_secondLevelYards",
+    "home_defense_secondLevelYards",
+    "home_offense_openFieldYards",
+    "home_defense_openFieldYards",
+    "home_offense_pointsPerOpportunity",
+    "home_defense_pointsPerOpportunity",
+    "home_offense_havoc",
+    "home_defense_havoc",
+    "away_offense_successRate",
+    "away_defense_successRate",
+    "away_offense_explosiveness",
+    "away_defense_explosiveness",
+    "away_offense_powerSuccess",
+    "away_defense_powerSuccess",
+    "away_offense_stuffRate",
+    "away_defense_stuffRate",
+    "away_offense_lineYards",
+    "away_defense_lineYards",
+    "away_offense_secondLevelYards",
+    "away_defense_secondLevelYards",
+    "away_offense_openFieldYards",
+    "away_defense_openFieldYards",
+    "away_offense_pointsPerOpportunity",
+    "away_defense_pointsPerOpportunity",
+    "away_offense_havoc",
+    "away_defense_havoc"
+  ],
+  "adv_feature_names": [
+    "offense_successRate",
+    "defense_successRate",
+    "offense_explosiveness",
+    "defense_explosiveness",
+    "offense_powerSuccess",
+    "defense_powerSuccess",
+    "offense_stuffRate",
+    "defense_stuffRate",
+    "offense_lineYards",
+    "defense_lineYards",
+    "offense_secondLevelYards",
+    "defense_secondLevelYards",
+    "offense_openFieldYards",
+    "defense_openFieldYards",
+    "offense_pointsPerOpportunity",
+    "defense_pointsPerOpportunity",
+    "offense_havoc",
+    "defense_havoc"
+  ],
+  "adv_fields": [
+    [
+      "offense",
+      "successRate"
+    ],
+    [
+      "defense",
+      "successRate"
+    ],
+    [
+      "offense",
+      "explosiveness"
+    ],
+    [
+      "defense",
+      "explosiveness"
+    ],
+    [
+      "offense",
+      "powerSuccess"
+    ],
+    [
+      "defense",
+      "powerSuccess"
+    ],
+    [
+      "offense",
+      "stuffRate"
+    ],
+    [
+      "defense",
+      "stuffRate"
+    ],
+    [
+      "offense",
+      "lineYards"
+    ],
+    [
+      "defense",
+      "lineYards"
+    ],
+    [
+      "offense",
+      "secondLevelYards"
+    ],
+    [
+      "defense",
+      "secondLevelYards"
+    ],
+    [
+      "offense",
+      "openFieldYards"
+    ],
+    [
+      "defense",
+      "openFieldYards"
+    ],
+    [
+      "offense",
+      "pointsPerOpportunity"
+    ],
+    [
+      "defense",
+      "pointsPerOpportunity"
+    ]
+  ],
+  "off_features": [
+    "own_ppg",
+    "own_off_ppa",
+    "opp_ppg_allowed",
+    "opp_def_ppa",
+    "games_played"
+  ],
+  "def_features": [
+    "own_opp_ppg",
+    "own_def_ppa",
+    "opp_own_ppg",
+    "opp_off_ppa",
+    "games_played"
+  ],
+  "spread_metamodel": {
+    "selected": [
+      "gen2",
+      "gen1",
+      "gen3"
+    ],
+    "weights": [
+      0.43815751768653827,
+      0.36844482245493476,
+      0.2576448523298063
+    ]
+  },
+  "total_metamodel": {
+    "selected": [
+      "gen3_total",
+      "gen2_total"
+    ],
+    "weights": [
+      0.6020942620371478,
+      0.39653655885395095
+    ]
+  },
+  "hfa": 2.5,
+  "games_to_full_trust_margin": 8,
+  "assumed_plays_per_game": 70
+}
