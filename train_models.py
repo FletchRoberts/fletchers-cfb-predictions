@@ -63,10 +63,20 @@ ADV_FIELDS = [
 ADV_FEATURE_NAMES = [f"{side}_{field}" for side, field in ADV_FIELDS] + ["offense_havoc", "defense_havoc"]
 
 
-def fetch(endpoint, params):
-    resp = requests.get(f"{BASE_URL}{endpoint}", headers=HEADERS, params=params)
-    resp.raise_for_status()
-    return resp.json()
+def fetch(endpoint, params, max_retries=3, timeout=30):
+    # timeout= is critical here: requests has NO default timeout, meaning a hung
+    # connection would wait forever with no error -- this is what caused the very
+    # first real run of this script to hang for hours instead of failing fast.
+    for attempt in range(1, max_retries + 1):
+        try:
+            resp = requests.get(f"{BASE_URL}{endpoint}", headers=HEADERS, params=params, timeout=timeout)
+            resp.raise_for_status()
+            return resp.json()
+        except requests.exceptions.RequestException as e:
+            print(f"  Request to {endpoint} failed (attempt {attempt}/{max_retries}): {e}")
+            if attempt == max_retries:
+                raise
+            time.sleep(5 * attempt)  # brief backoff before retrying
 
 
 def filter_fbs_games(games_list):
@@ -504,6 +514,52 @@ def main():
     # this training run already pulled as part of TRAIN_SEASONS)
     with open(f"{MODELS_DIR}/prior_advanced_lookup.json", "w") as f:
         json.dump(prior_advanced_lookup, f)
+
+    # Save each team's FINAL full-season rolling profile (own PPG, PPA, etc.) from
+    # the most recent training season. Stage 2 needs this as Gen 3's cold-start
+    # fallback -- without it, teams with 0 current-season games get a flat, generic
+    # default (identical for every team) instead of a real, differentiated prior-
+    # season starting point, unlike Gen 1 (talent prior) and Gen 2 (prior advanced
+    # stats), which were both designed with this fallback from the start.
+    print("Saving prior-season team profiles (Gen 3 cold-start fallback)...")
+    most_recent_season = TRAIN_SEASONS[-1]
+    most_recent_games = fbs_games[most_recent_season]
+    game_ppa_final = {}
+    for r in all_ppa[most_recent_season]:
+        gid = r.get("gameId")
+        if gid is None or not r.get("offense") or not r.get("defense"):
+            continue
+        if r["offense"].get("overall") is None or r["defense"].get("overall") is None:
+            continue
+        game_ppa_final.setdefault(gid, {})[r["team"]] = {"off": r["offense"]["overall"], "def": r["defense"]["overall"]}
+
+    final_scoring, final_ppa_agg = {}, {}
+    for g in most_recent_games:
+        home, away = g["homeTeam"], g["awayTeam"]
+        hp, ap = g["homePoints"], g["awayPoints"]
+        for t, pf, pa in [(home, hp, ap), (away, ap, hp)]:
+            s = final_scoring.setdefault(t, {"pf": [], "pa": []})
+            s["pf"].append(pf); s["pa"].append(pa)
+        gp = game_ppa_final.get(g["id"])
+        if gp:
+            for t in [home, away]:
+                if t in gp:
+                    p = final_ppa_agg.setdefault(t, {"off": [], "def": []})
+                    p["off"].append(gp[t]["off"]); p["def"].append(gp[t]["def"])
+
+    prior_team_profiles = {}
+    for t in final_scoring:
+        s = final_scoring[t]
+        p = final_ppa_agg.get(t, {})
+        prior_team_profiles[t] = {
+            "own_ppg": float(np.mean(s["pf"])) if s["pf"] else 24.0,
+            "opp_ppg_allowed": float(np.mean(s["pa"])) if s["pa"] else 24.0,
+            "off_ppa": float(np.mean(p.get("off", [0]))) if p.get("off") else 0.0,
+            "def_ppa": float(np.mean(p.get("def", [0]))) if p.get("def") else 0.0,
+        }
+    with open(f"{MODELS_DIR}/prior_team_profiles.json", "w") as f:
+        json.dump({"season": most_recent_season, "profiles": prior_team_profiles}, f)
+    print(f"  Saved {len(prior_team_profiles)} teams' final {most_recent_season} profiles.")
 
     print(f"\nDone. Models and metadata saved to {MODELS_DIR}/")
     print(f"Spread metamodel: {dict(zip(selected_spread, coefs_spread.round(3)))}")

@@ -92,6 +92,56 @@ def main():
         meta = json.load(f)
     with open(f"{MODELS_DIR}/prior_advanced_lookup.json") as f:
         prior_advanced_lookup = json.load(f)
+    with open(f"{MODELS_DIR}/prior_team_profiles.json") as f:
+        prior_team_profiles_data = json.load(f)
+    prior_team_profiles = prior_team_profiles_data["profiles"]
+    saved_profile_season = prior_team_profiles_data["season"]
+    print(f"  Loaded saved team profiles for season {saved_profile_season} "
+          f"({len(prior_team_profiles)} teams).")
+
+    if saved_profile_season != PRIOR_SEASON:
+        print(f"  WARNING: saved profiles are from {saved_profile_season}, but we need "
+              f"{PRIOR_SEASON} (train_models.py hasn't been re-run since the season "
+              f"changed). Fetching {PRIOR_SEASON} data fresh instead of using the stale "
+              f"file, so predictions stay correct even if the annual retrain was missed.")
+        prior_games_fresh = filter_fbs_games(fetch("/games", {"year": PRIOR_SEASON}))
+        prior_ppa_fresh = fetch("/ppa/games", {"year": PRIOR_SEASON})
+
+        game_ppa_fresh = {}
+        for r in prior_ppa_fresh:
+            gid = r.get("gameId")
+            if gid is None or not r.get("offense") or not r.get("defense"):
+                continue
+            if r["offense"].get("overall") is None or r["defense"].get("overall") is None:
+                continue
+            game_ppa_fresh.setdefault(gid, {})[r["team"]] = {"off": r["offense"]["overall"], "def": r["defense"]["overall"]}
+
+        fresh_scoring, fresh_ppa_agg = {}, {}
+        for g in prior_games_fresh:
+            home, away = g["homeTeam"], g["awayTeam"]
+            hp, ap = g["homePoints"], g["awayPoints"]
+            for t, pf, pa in [(home, hp, ap), (away, ap, hp)]:
+                s = fresh_scoring.setdefault(t, {"pf": [], "pa": []})
+                s["pf"].append(pf); s["pa"].append(pa)
+            gp = game_ppa_fresh.get(g["id"])
+            if gp:
+                for t in [home, away]:
+                    if t in gp:
+                        p = fresh_ppa_agg.setdefault(t, {"off": [], "def": []})
+                        p["off"].append(gp[t]["off"]); p["def"].append(gp[t]["def"])
+
+        prior_team_profiles = {}
+        for t in fresh_scoring:
+            s = fresh_scoring[t]
+            p = fresh_ppa_agg.get(t, {})
+            prior_team_profiles[t] = {
+                "own_ppg": float(np.mean(s["pf"])) if s["pf"] else 24.0,
+                "opp_ppg_allowed": float(np.mean(s["pa"])) if s["pa"] else 24.0,
+                "off_ppa": float(np.mean(p.get("off", [0]))) if p.get("off") else 0.0,
+                "def_ppa": float(np.mean(p.get("def", [0]))) if p.get("def") else 0.0,
+            }
+        print(f"  Freshly computed {PRIOR_SEASON} profiles for {len(prior_team_profiles)} teams "
+              f"(self-healed instead of using stale {saved_profile_season} data).")
 
     gen2_margin_model = joblib.load(f"{MODELS_DIR}/gen2_margin_model.joblib")
     gen2_total_model = joblib.load(f"{MODELS_DIR}/gen2_total_model.joblib")
@@ -219,15 +269,44 @@ def main():
                     p = ppa_agg.setdefault(t, {"off": [], "def": []})
                     p["off"].append(gp[t]["off"]); p["def"].append(gp[t]["def"])
 
+    # League-average fallback ONLY for teams with neither current-season games NOR
+    # prior-season data at all (e.g. a team brand new to FBS this year) -- everyone
+    # else gets a real, differentiated blend instead of a generic flat number.
+    league_avg_prior_ppg = float(np.mean([p["own_ppg"] for p in prior_team_profiles.values()])) if prior_team_profiles else 24.0
+    league_avg_prior_opp_ppg = float(np.mean([p["opp_ppg_allowed"] for p in prior_team_profiles.values()])) if prior_team_profiles else 24.0
+    league_avg_prior_off_ppa = float(np.mean([p["off_ppa"] for p in prior_team_profiles.values()])) if prior_team_profiles else 0.0
+    league_avg_prior_def_ppa = float(np.mean([p["def_ppa"] for p in prior_team_profiles.values()])) if prior_team_profiles else 0.0
+
     team_profiles = {}
     for t in all_teams:
         s = scoring.get(t)
         p = ppa_agg.get(t)
+        games_played_this_season = len(s["pf"]) if s else 0
+
+        current = {
+            "own_ppg": float(np.mean(s["pf"])) if s and s["pf"] else None,
+            "opp_ppg_allowed": float(np.mean(s["pa"])) if s and s["pa"] else None,
+            "off_ppa": float(np.mean(p["off"])) if p and p["off"] else None,
+            "def_ppa": float(np.mean(p["def"])) if p and p["def"] else None,
+        }
+        prior = prior_team_profiles.get(t, {
+            "own_ppg": league_avg_prior_ppg, "opp_ppg_allowed": league_avg_prior_opp_ppg,
+            "off_ppa": league_avg_prior_off_ppa, "def_ppa": league_avg_prior_def_ppa,
+        })
+
+        # Same games-played trust ramp used throughout this project for margin/total blending
+        w = min(games_played_this_season / GAMES_TO_FULL_TRUST_MARGIN, 1)
+        blended = {}
+        for key in ["own_ppg", "opp_ppg_allowed", "off_ppa", "def_ppa"]:
+            cur_val = current[key]
+            prior_val = prior.get(key, 0.0)
+            blended[key] = (w * cur_val + (1 - w) * prior_val) if cur_val is not None else prior_val
+
         team_profiles[t] = {
-            "own_ppg": float(np.mean(s["pf"])) if s and s["pf"] else 24.0,
-            "opp_ppg_allowed": float(np.mean(s["pa"])) if s and s["pa"] else 24.0,
-            "off_ppa": float(np.mean(p["off"])) if p and p["off"] else 0.0,
-            "def_ppa": float(np.mean(p["def"])) if p and p["def"] else 0.0,
+            "own_ppg": blended["own_ppg"],
+            "opp_ppg_allowed": blended["opp_ppg_allowed"],
+            "off_ppa": blended["off_ppa"],
+            "def_ppa": blended["def_ppa"],
             "games_played": len(s["pf"]) if s else 0
         }
 
