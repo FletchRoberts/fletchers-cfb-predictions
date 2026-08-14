@@ -1,0 +1,44 @@
+name: Update Current Season Data (Stage 2)
+
+# Runs daily on a schedule -- this is the CHEAP, frequent job. Also allows
+# manual triggering (workflow_dispatch), useful for testing without waiting
+# for the schedule.
+#
+# Cron times are in UTC. "0 8 * * *" = 8:00 AM UTC every day. Adjust the
+# schedule below if you want a different time -- crontab.guru is a good
+# reference for cron syntax if you want to change it later.
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write  # required so this workflow can push its commit back to the repo
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15  # this job should be fast (only 3 cheap API calls) -- if it's still
+                          # running after 15 minutes, something is genuinely wrong
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run update script
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: python update_current.py
+
+      - name: Commit updated data back to the repo
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Daily data refresh"
+          file_pattern: "site/data/**"
