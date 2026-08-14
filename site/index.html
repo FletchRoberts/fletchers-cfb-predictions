@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fletcher's CFB Predictions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --field: #0d1f14;
+    --field-line: #1e3a26;
+    --chalk: #f2f0e6;
+    --chalk-dim: #a9b3ab;
+    --gold: #d4a24c;
+    --gold-bright: #e8be6e;
+    --crimson: #9c3b3b;
+    --panel: #142a1c;
+    --panel-border: #26452f;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--field);
+    background-image:
+      repeating-linear-gradient(90deg, var(--field-line) 0px, var(--field-line) 1px, transparent 1px, transparent 80px);
+    color: var(--chalk);
+    font-family: 'Archivo', -apple-system, sans-serif;
+    min-height: 100vh;
+  }
+
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  header { text-align: center; margin-bottom: 40px; }
+
+  h1 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(28px, 6vw, 48px);
+    letter-spacing: 0.02em;
+    margin: 0 0 8px;
+    color: var(--chalk);
+    text-transform: uppercase;
+  }
+  h1 span { color: var(--gold-bright); }
+
+  .subtitle {
+    color: var(--chalk-dim);
+    font-size: 14px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  .updated-badge {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 4px 12px;
+    border: 1px solid var(--panel-border);
+    border-radius: 3px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--chalk-dim);
+    background: var(--panel);
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 28px;
+    margin-bottom: 32px;
+  }
+
+  .panel-title {
+    font-family: 'Archivo Black', sans-serif;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    margin: 0 0 20px;
+  }
+
+  .matchup-picker {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: end;
+    margin-bottom: 24px;
+  }
+
+  .field-group { display: flex; flex-direction: column; gap: 6px; }
+  .field-group label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--chalk-dim);
+  }
+
+  select {
+    background: var(--field);
+    color: var(--chalk);
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+    padding: 12px 14px;
+    font-family: 'Archivo', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a9b3ab' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+  select:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+
+  .vs-mark {
+    font-family: 'Space Mono', monospace;
+    color: var(--chalk-dim);
+    font-size: 13px;
+    padding-bottom: 12px;
+    text-align: center;
+  }
+
+  button#predictBtn {
+    width: 100%;
+    background: var(--gold);
+    color: #1a1206;
+    border: none;
+    border-radius: 4px;
+    padding: 14px;
+    font-family: 'Archivo Black', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  button#predictBtn:hover { background: var(--gold-bright); }
+  button#predictBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .scoreboard {
+    display: none;
+    margin-top: 28px;
+    border-top: 1px solid var(--panel-border);
+    padding-top: 24px;
+  }
+  .scoreboard.visible { display: block; }
+
+  .score-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .team-name {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .team-name.favorite { color: var(--gold-bright); }
+  .score-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 36px;
+    font-weight: 700;
+    min-width: 70px;
+    text-align: right;
+  }
+  .fav-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    border-radius: 3px;
+    padding: 2px 6px;
+  }
+
+  .divider-line {
+    border: none;
+    border-top: 1px dashed var(--panel-border);
+    margin: 14px 0;
+  }
+
+  .stat-strip {
+    display: flex;
+    gap: 32px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  .stat-item { display: flex; flex-direction: column; gap: 2px; }
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--chalk-dim);
+  }
+  .stat-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--chalk);
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--chalk-dim);
+    padding: 8px 10px;
+    border-bottom: 2px solid var(--panel-border);
+  }
+  th.num, td.num { text-align: right; }
+  td {
+    padding: 10px 10px;
+    border-bottom: 1px solid var(--field-line);
+    font-size: 14px;
+  }
+  tr:hover td { background: rgba(212, 162, 76, 0.06); }
+  .rank-cell {
+    font-family: 'Space Mono', monospace;
+    color: var(--chalk-dim);
+    width: 40px;
+  }
+  .rank-cell.top { color: var(--gold-bright); font-weight: 700; }
+  td.team-cell { font-weight: 600; }
+  td.num { font-family: 'Space Mono', monospace; }
+
+  .empty-state, .error-state {
+    color: var(--chalk-dim);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    padding: 20px;
+    text-align: center;
+  }
+  .error-state { color: var(--crimson); }
+
+  footer {
+    text-align: center;
+    color: var(--chalk-dim);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    margin-top: 40px;
+  }
+
+  @media (max-width: 600px) {
+    .matchup-picker { grid-template-columns: 1fr; }
+    .vs-mark { padding: 4px 0; }
+    .score-num { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Fletcher's <span>CFB</span> Predictions</h1>
+    <div class="subtitle">MODEL-BASED SPREAD &amp; TOTAL PROJECTIONS</div>
+    <div class="updated-badge" id="updatedBadge">loading...</div>
+  </header>
+
+  <section class="panel">
+    <h2 class="panel-title">Matchup Predictor</h2>
+    <div class="matchup-picker">
+      <div class="field-group">
+        <label for="homeSelect">Home</label>
+        <select id="homeSelect"></select>
+      </div>
+      <div class="vs-mark">VS</div>
+      <div class="field-group">
+        <label for="awaySelect">Away</label>
+        <select id="awaySelect"></select>
+      </div>
+    </div>
+    <button id="predictBtn">Predict Matchup</button>
+
+    <div class="scoreboard" id="scoreboard">
+      <div class="score-row">
+        <span class="team-name" id="homeNameOut"></span>
+        <span class="fav-tag" id="homeFavTag" style="visibility:hidden;">FAVORITE</span>
+        <span class="score-num" id="homeScoreOut"></span>
+      </div>
+      <div class="score-row">
+        <span class="team-name" id="awayNameOut"></span>
+        <span class="fav-tag" id="awayFavTag" style="visibility:hidden;">FAVORITE</span>
+        <span class="score-num" id="awayScoreOut"></span>
+      </div>
+      <hr class="divider-line">
+      <div class="stat-strip">
+        <div class="stat-item">
+          <span class="stat-label">Spread</span>
+          <span class="stat-value" id="spreadOut"></span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Total</span>
+          <span class="stat-value" id="totalOut"></span>
+        </div>
+      </div>
+    </div>
+    <div class="error-state" id="matchupError" style="display:none;"></div>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel-title">Power Rankings</h2>
+    <div id="rankingsContainer">
+      <div class="empty-state">Loading rankings...</div>
+    </div>
+  </section>
+
+  <footer>Built by Fletcher &middot; updates automatically from live season data</footer>
+</div>
+
+<script>
+(function () {
+  const DATA_BASE = "data/";
+
+  const state = { predictions: null, rankings: null, teams: null };
+
+  function fmtSigned(n) {
+    const v = Number(n);
+    return (v >= 0 ? "+" : "") + v.toFixed(1);
+  }
+
+  async function loadJSON(name) {
+    const res = await fetch(DATA_BASE + name, { cache: "no-store" });
+    if (!res.ok) throw new Error("Failed to load " + name + " (" + res.status + ")");
+    return res.json();
+  }
+
+  function populateTeamSelects(teams) {
+    const homeSel = document.getElementById("homeSelect");
+    const awaySel = document.getElementById("awaySelect");
+    homeSel.innerHTML = "";
+    awaySel.innerHTML = "";
+    teams.forEach(function (t) {
+      const optH = document.createElement("option");
+      optH.value = t; optH.textContent = t;
+      homeSel.appendChild(optH);
+      const optA = document.createElement("option");
+      optA.value = t; optA.textContent = t;
+      awaySel.appendChild(optA);
+    });
+    if (teams.length > 1) {
+      homeSel.selectedIndex = 0;
+      awaySel.selectedIndex = 1;
+    }
+  }
+
+  function renderPrediction(home, away) {
+    const errorEl = document.getElementById("matchupError");
+    const boardEl = document.getElementById("scoreboard");
+    errorEl.style.display = "none";
+    boardEl.classList.remove("visible");
+
+    if (home === away) {
+      errorEl.textContent = "Home and Away must be different teams.";
+      errorEl.style.display = "block";
+      return;
+    }
+
+    const key = home + "|" + away;
+    const pred = state.predictions[key];
+    if (!pred) {
+      errorEl.textContent = "No prediction available for " + home + " vs " + away + ".";
+      errorEl.style.display = "block";
+      return;
+    }
+
+    document.getElementById("homeNameOut").textContent = pred.home;
+    document.getElementById("awayNameOut").textContent = pred.away;
+    document.getElementById("homeScoreOut").textContent = pred.predicted_home_score.toFixed(1);
+    document.getElementById("awayScoreOut").textContent = pred.predicted_away_score.toFixed(1);
+
+    const homeFav = pred.favorite === pred.home;
+    document.getElementById("homeNameOut").classList.toggle("favorite", homeFav);
+    document.getElementById("awayNameOut").classList.toggle("favorite", !homeFav);
+    document.getElementById("homeFavTag").style.visibility = homeFav ? "visible" : "hidden";
+    document.getElementById("awayFavTag").style.visibility = !homeFav ? "visible" : "hidden";
+
+    const spreadFavName = pred.favorite;
+    const spreadMag = Math.abs(pred.predicted_spread).toFixed(1);
+    document.getElementById("spreadOut").textContent = spreadFavName + " -" + spreadMag;
+    document.getElementById("totalOut").textContent = pred.predicted_total.toFixed(1);
+
+    boardEl.classList.add("visible");
+  }
+
+  function renderRankings(rankings) {
+    const container = document.getElementById("rankingsContainer");
+    if (!rankings || rankings.length === 0) {
+      container.innerHTML = '<div class="empty-state">No rankings available yet.</div>';
+      return;
+    }
+
+    let html = "<table><thead><tr>" +
+      "<th>Rank</th><th>Team</th><th class='num'>Rating</th><th class='num'>Games</th>" +
+      "</tr></thead><tbody>";
+
+    rankings.forEach(function (r) {
+      const rankClass = r.rank <= 10 ? "rank-cell top" : "rank-cell";
+      html += "<tr>" +
+        "<td class='" + rankClass + "'>" + r.rank + "</td>" +
+        "<td class='team-cell'>" + r.team + "</td>" +
+        "<td class='num'>" + fmtSigned(r.composite_rating) + "</td>" +
+        "<td class='num'>" + r.games_played + "</td>" +
+        "</tr>";
+    });
+    html += "</tbody></table>";
+    container.innerHTML = html;
+  }
+
+  function renderUpdatedBadge(meta) {
+    const el = document.getElementById("updatedBadge");
+    el.textContent = meta.season + " SEASON \u00b7 UPDATED " + meta.updated_at +
+      " \u00b7 " + meta.games_processed + " GAMES PROCESSED";
+  }
+
+  async function init() {
+    try {
+      const [predictions, rankings, teams, lastUpdated] = await Promise.all([
+        loadJSON("predictions.json"),
+        loadJSON("rankings.json"),
+        loadJSON("teams.json"),
+        loadJSON("last_updated.json")
+      ]);
+
+      state.predictions = predictions;
+      state.rankings = rankings;
+      state.teams = teams;
+
+      populateTeamSelects(teams);
+      renderRankings(rankings);
+      renderUpdatedBadge(lastUpdated);
+
+      document.getElementById("predictBtn").disabled = false;
+      document.getElementById("predictBtn").addEventListener("click", function () {
+        const home = document.getElementById("homeSelect").value;
+        const away = document.getElementById("awaySelect").value;
+        renderPrediction(home, away);
+      });
+    } catch (err) {
+      document.getElementById("updatedBadge").textContent = "DATA UNAVAILABLE";
+      document.getElementById("rankingsContainer").innerHTML =
+        '<div class="error-state">Could not load data: ' + err.message + '</div>';
+      console.error(err);
+    }
+  }
+
+  document.getElementById("predictBtn").disabled = true;
+  init();
+})();
+</script>
+</body>
+</html>
