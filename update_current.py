@@ -37,10 +37,17 @@ OUTPUT_DIR = "site/data"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
-def fetch(endpoint, params):
-    resp = requests.get(f"{BASE_URL}{endpoint}", headers=HEADERS, params=params)
-    resp.raise_for_status()
-    return resp.json()
+def fetch(endpoint, params, max_retries=3, timeout=30):
+    for attempt in range(1, max_retries + 1):
+        try:
+            resp = requests.get(f"{BASE_URL}{endpoint}", headers=HEADERS, params=params, timeout=timeout)
+            resp.raise_for_status()
+            return resp.json()
+        except requests.exceptions.RequestException as e:
+            print(f"  Request to {endpoint} failed (attempt {attempt}/{max_retries}): {e}")
+            if attempt == max_retries:
+                raise
+            time.sleep(5 * attempt)
 
 
 def filter_fbs_games(games_list):
@@ -142,6 +149,21 @@ def main():
 
     talent_raw = {r["team"]: r["talent"] for r in talent_current if r.get("talent") is not None}
 
+    if len(talent_raw) < 20:  # sanity threshold -- a real season has ~130 teams with talent data
+        print(f"  Only {len(talent_raw)} teams found in {CURRENT_SEASON} talent data "
+              f"(expected ~130) -- likely means this season's Talent Composite isn't "
+              f"published yet. Falling back to {PRIOR_SEASON}'s talent data as a cold-start "
+              f"proxy (same principle as our prior-season PPG/advanced-stats fallbacks).")
+        talent_prior_season = fetch("/talent", {"year": PRIOR_SEASON})
+        talent_raw = {r["team"]: r["talent"] for r in talent_prior_season if r.get("talent") is not None}
+
+        if len(talent_raw) < 20:
+            raise RuntimeError(
+                f"No usable talent data found for either {CURRENT_SEASON} or {PRIOR_SEASON} "
+                f"({len(talent_raw)} teams). Cannot compute any team ratings without this. "
+                f"Check the CFBD /talent endpoint directly for both years before re-running."
+            )
+
     # -----------------------------------------------------------------
     # Gen 1 current ratings (SRS + Talent blend)
     # -----------------------------------------------------------------
@@ -151,14 +173,12 @@ def main():
     # Include teams with talent data even if they haven't played yet (e.g. week 0/1)
     all_teams = sorted(set(all_teams) | set(talent_raw.keys()))
 
+    talent_vals = np.array([talent_raw[t] for t in all_teams if t in talent_raw])
+    talent_mean, talent_std = talent_vals.mean(), talent_vals.std()
     if len(full_ratings) > 0:
-        talent_vals = np.array([talent_raw[t] for t in all_teams if t in talent_raw])
-        talent_mean, talent_std = talent_vals.mean(), talent_vals.std()
         srs_vals = np.array(list(full_ratings.values()))
         srs_std = srs_vals.std() if srs_vals.std() > 1e-6 else 1.0
     else:
-        talent_vals = np.array([talent_raw[t] for t in all_teams if t in talent_raw])
-        talent_mean, talent_std = talent_vals.mean(), talent_vals.std()
         srs_std = 15.0  # reasonable fallback scale if literally zero games played yet anywhere
 
     def talent_prior(team):
