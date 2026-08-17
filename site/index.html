@@ -6,307 +6,28 @@
 <title>Fletcher's CFB Predictions</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --field: #0d1f14;
-    --field-line: #1e3a26;
-    --chalk: #f2f0e6;
-    --chalk-dim: #a9b3ab;
-    --gold: #d4a24c;
-    --gold-bright: #e8be6e;
-    --crimson: #9c3b3b;
-    --panel: #142a1c;
-    --panel-border: #26452f;
-  }
-
-  * { box-sizing: border-box; }
-
-  body {
-    margin: 0;
-    background: var(--field);
-    background-image:
-      repeating-linear-gradient(90deg, var(--field-line) 0px, var(--field-line) 1px, transparent 1px, transparent 80px),
-      url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22480%22%20height%3D%22480%22%3E%20%3Ctext%20x%3D%2220%22%20y%3D%2245%22%20font-family%3D%22cursive%22%20font-size%3D%2226%22%20fill%3D%22%23f2f0e6%22%20opacity%3D%220.16%22%20transform%3D%22rotate%28-4%2020%2045%29%22%3E%26%23931%3Bx%26%23178%3B%3C/text%3E%20%3Cpath%20d%3D%22M60%2085%20Q%2090%2062%20122%2092%20T%20185%2088%22%20stroke%3D%22%23f2f0e6%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20opacity%3D%220.14%22/%3E%20%3Ctext%20x%3D%22205%22%20y%3D%2265%22%20font-family%3D%22cursive%22%20font-size%3D%2220%22%20fill%3D%22%23f2f0e6%22%20opacity%3D%220.15%22%20transform%3D%22rotate%283%20205%2065%29%22%3E%2B7.5%3C/text%3E%20%3Cellipse%20cx%3D%22255%22%20cy%3D%22145%22%20rx%3D%2238%22%20ry%3D%2219%22%20stroke%3D%22%23d4a24c%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20opacity%3D%220.20%22%20transform%3D%22rotate%28-6%20255%20145%29%22/%3E%20%3Ctext%20x%3D%22233%22%20y%3D%22150%22%20font-family%3D%22cursive%22%20font-size%3D%2218%22%20fill%3D%22%23d4a24c%22%20opacity%3D%220.20%22%3E72%25%3C/text%3E%20%3Cpath%20d%3D%22M310%2045%20L332%2022%20M332%2022%20L326%2016%20M332%2022%20L327%2027%22%20stroke%3D%22%23f2f0e6%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20opacity%3D%220.14%22%20stroke-linecap%3D%22round%22/%3E%20%3Ctext%20x%3D%2235%22%20y%3D%22190%22%20font-family%3D%22cursive%22%20font-size%3D%2222%22%20fill%3D%22%23f2f0e6%22%20opacity%3D%220.13%22%20transform%3D%22rotate%282%2035%20190%29%22%3E%26%238776%3B%20%26%23916%3B%3C/text%3E%20%3Cpath%20d%3D%22M105%20225%20Q%20138%20202%20165%20234%20Q%20192%20264%20224%20233%22%20stroke%3D%22%23f2f0e6%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22%20opacity%3D%220.13%22/%3E%20%3Ctext%20x%3D%22255%22%20y%3D%22258%22%20font-family%3D%22cursive%22%20font-size%3D%2228%22%20fill%3D%22%23f2f0e6%22%20opacity%3D%220.16%22%20transform%3D%22rotate%28-3%20255%20258%29%22%3E%3F%21%3C/text%3E%20%3Cline%20x1%3D%2220%22%20y1%3D%22305%22%20x2%3D%22128%22%20y2%3D%22305%22%20stroke%3D%22%23f2f0e6%22%20stroke-width%3D%222%22%20opacity%3D%220.15%22/%3E%20%3Ctext%20x%3D%2242%22%20y%3D%22300%22%20font-family%3D%22cursive%22%20font-size%3D%2216%22%20fill%3D%22%23f2f0e6%22%20opacity%3D%220.15%22%3Ex%2B3%3C/text%3E%20%3Ctext%20x%3D%2242%22%20y%3D%22325%22%20font-family%3D%22cursive%22%20font-size%3D%2216%22%20fill%3D%22%23f2f0e6%22%20opacity%3D%220.15%22%3E7%3C/text%3E%20%3Ctext%20x%3D%22305%22%20y%3D%22325%22%20font-family%3D%22cursive%22%20font-size%3D%2226%22%20fill%3D%22%23f2f0e6%22%20opacity%3D%220.15%22%20transform%3D%22rotate%285%20305%20325%29%22%3E%26%23960%3B%3C/text%3E%20%3Cpath%20d%3D%22M350%20105%20Q%20372%20135%20350%20165%22%20stroke%3D%22%23d4a24c%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20opacity%3D%220.16%22/%3E%20%3Ctext%20x%3D%22180%22%20y%3D%22358%22%20font-family%3D%22cursive%22%20font-size%3D%2219%22%20fill%3D%22%23f2f0e6%22%20opacity%3D%220.13%22%20transform%3D%22rotate%28-2%20180%20358%29%22%3EHFA%3D2.5%3C/text%3E%20%3Cpath%20d%3D%22M0%20390%20Q%2042%20368%2084%20390%20T%20168%20384%22%20stroke%3D%22%23f2f0e6%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22%20opacity%3D%220.10%22/%3E%20%3Ctext%20x%3D%22380%22%20y%3D%22420%22%20font-family%3D%22cursive%22%20font-size%3D%2220%22%20fill%3D%22%23f2f0e6%22%20opacity%3D%220.14%22%20transform%3D%22rotate%284%20380%20420%29%22%3E%26%238721%3B%3D1%3C/text%3E%20%3Ccircle%20cx%3D%2280%22%20cy%3D%22420%22%20r%3D%2224%22%20stroke%3D%22%23d4a24c%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22%20opacity%3D%220.15%22%20transform%3D%22rotate%28-8%2080%20420%29%22/%3E%20%3Ctext%20x%3D%2265%22%20y%3D%22425%22%20font-family%3D%22cursive%22%20font-size%3D%2215%22%20fill%3D%22%23d4a24c%22%20opacity%3D%220.17%22%3EW%3C/text%3E%20%3C/svg%3E");
-    background-repeat: repeat, repeat;
-    background-size: 80px 100%, 480px 480px;
-    color: var(--chalk);
-    font-family: 'Archivo', -apple-system, sans-serif;
-    min-height: 100vh;
-  }
-
-  .wrap { max-width: 1000px; margin: 0 auto; padding: 32px 20px 80px; }
-
-  header { text-align: center; margin-bottom: 40px; }
-
-  h1 {
-    font-family: 'Kalam', cursive;
-    font-weight: 700;
-    font-size: clamp(30px, 6.5vw, 52px);
-    letter-spacing: 0.01em;
-    margin: 0 0 8px;
-    color: var(--chalk);
-    text-transform: uppercase;
-    transform: rotate(-1.2deg);
-    display: inline-block;
-  }
-  h1 span { color: var(--gold-bright); }
-
-  .subtitle {
-    color: var(--chalk-dim);
-    font-size: 14px;
-    font-family: 'Space Mono', monospace;
-    letter-spacing: 0.05em;
-  }
-
-  .updated-badge {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 4px 12px;
-    border: 1px solid var(--panel-border);
-    border-radius: 3px;
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--chalk-dim);
-    background: var(--panel);
-  }
-
-  .panel {
-    background: var(--panel);
-    border: 1px solid var(--panel-border);
-    border-radius: 6px;
-    padding: 28px;
-    margin-bottom: 32px;
-  }
-
-  .panel-title {
-    font-family: 'Kalam', cursive;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 17px;
-    letter-spacing: 0.06em;
-    color: var(--gold);
-    margin: 0 0 20px;
-    transform: rotate(-0.6deg);
-    display: inline-block;
-  }
-
-  .matchup-picker {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: 16px;
-    align-items: end;
-    margin-bottom: 24px;
-  }
-
-  .field-group { display: flex; flex-direction: column; gap: 6px; }
-  .field-group label {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--chalk-dim);
-  }
-
-  select {
-    background: var(--field);
-    color: var(--chalk);
-    border: 1px solid var(--panel-border);
-    border-radius: 4px;
-    padding: 12px 14px;
-    font-family: 'Archivo', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a9b3ab' stroke-width='2' fill='none'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 36px;
-  }
-  select:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
-
-  .vs-mark {
-    font-family: 'Space Mono', monospace;
-    color: var(--chalk-dim);
-    font-size: 13px;
-    padding-bottom: 12px;
-    text-align: center;
-  }
-
-  button#predictBtn {
-    width: 100%;
-    background: var(--gold);
-    color: #1a1206;
-    border: none;
-    border-radius: 4px;
-    padding: 14px;
-    font-family: 'Archivo Black', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background 0.15s ease;
-  }
-  button#predictBtn:hover { background: var(--gold-bright); }
-  button#predictBtn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  .scoreboard {
-    display: none;
-    margin-top: 28px;
-    border-top: 1px solid var(--panel-border);
-    padding-top: 24px;
-  }
-  .scoreboard.visible { display: block; }
-
-  .score-row {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 20px;
-    align-items: center;
-    margin-bottom: 8px;
-  }
-  .team-name {
-    font-family: 'Archivo', sans-serif;
-    font-weight: 700;
-    font-size: 18px;
-  }
-  .team-name.favorite { color: var(--gold-bright); }
-  .score-num {
-    font-family: 'Space Mono', monospace;
-    font-size: 36px;
-    font-weight: 700;
-    min-width: 70px;
-    text-align: right;
-    position: relative;
-  }
-  .score-num.circled::before {
-    content: "";
-    position: absolute;
-    top: -10px; bottom: -8px; left: -14px; right: -10px;
-    border: 2.5px solid var(--gold);
-    border-radius: 52% 48% 47% 53% / 51% 46% 54% 49%;
-    transform: rotate(-3deg);
-    opacity: 0.85;
-    pointer-events: none;
-  }
-  .fav-tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--gold);
-    border: 1px solid var(--gold);
-    border-radius: 3px;
-    padding: 2px 6px;
-  }
-
-  .divider-line {
-    border: none;
-    border-top: 1px dashed var(--panel-border);
-    margin: 14px 0;
-  }
-
-  .stat-strip {
-    display: flex;
-    gap: 32px;
-    margin-top: 18px;
-    flex-wrap: wrap;
-  }
-  .stat-item { display: flex; flex-direction: column; gap: 2px; }
-  .stat-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--chalk-dim);
-  }
-  .stat-value {
-    font-family: 'Space Mono', monospace;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--chalk);
-  }
-
-  table { width: 100%; border-collapse: collapse; }
-  th {
-    text-align: left;
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--chalk-dim);
-    padding: 8px 10px;
-    border-bottom: 2px solid var(--panel-border);
-  }
-  th.num, td.num { text-align: right; }
-  td {
-    padding: 10px 10px;
-    border-bottom: 1px solid var(--field-line);
-    font-size: 14px;
-  }
-  tr:hover td { background: rgba(212, 162, 76, 0.06); }
-  .rank-cell {
-    font-family: 'Space Mono', monospace;
-    color: var(--chalk-dim);
-    width: 40px;
-  }
-  .rank-cell.top { color: var(--gold-bright); font-weight: 700; }
-  td.team-cell { font-weight: 600; }
-  td.num { font-family: 'Space Mono', monospace; }
-
-  .empty-state, .error-state {
-    color: var(--chalk-dim);
-    font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    padding: 20px;
-    text-align: center;
-  }
-  .error-state { color: var(--crimson); }
-
-  .result-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 3px;
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .result-badge.correct { background: rgba(58, 125, 68, 0.25); color: #7fd490; border: 1px solid #3a7d44; }
-  .result-badge.incorrect { background: rgba(156, 59, 59, 0.25); color: #e08a8a; border: 1px solid var(--crimson); }
-  .result-badge.pending { background: rgba(169, 179, 171, 0.15); color: var(--chalk-dim); border: 1px solid var(--panel-border); }
-
-  footer {
-    text-align: center;
-    color: var(--chalk-dim);
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    margin-top: 40px;
-  }
-
-  @media (max-width: 600px) {
-    .matchup-picker { grid-template-columns: 1fr; }
-    .vs-mark { padding: 4px 0; }
-    .score-num { font-size: 28px; }
-  }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <span class="nav-brand">Fletcher's <span class="accent">CFB</span> Predictions</span>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Predictor</a>
+      <a href="rankings.html" class="nav-link">Rankings</a>
+      <a href="weekly.html" class="nav-link">Weekly Results</a>
+    </div>
+  </div>
+</nav>
+
 <div class="wrap">
 
   <header>
-    <h1>Fletcher's <span>CFB</span> Predictions</h1>
-    <div class="subtitle">MODEL-BASED SPREAD &amp; TOTAL PROJECTIONS</div>
+    <h1>Model-Based <span>Spread</span> &amp; Total Projections</h1>
     <div class="updated-badge" id="updatedBadge">loading...</div>
   </header>
-
-  <section class="panel" id="accuracyPanel">
-    <h2 class="panel-title">Season Accuracy</h2>
-    <div class="stat-strip" id="accuracyStrip">
-      <div class="empty-state">Loading...</div>
-    </div>
-  </section>
 
   <section class="panel">
     <h2 class="panel-title">Matchup Predictor</h2>
@@ -321,7 +42,7 @@
         <select id="awaySelect"></select>
       </div>
     </div>
-    <button id="predictBtn">Predict Matchup</button>
+    <button id="predictBtn" class="primary-btn">Predict Matchup</button>
 
     <div class="scoreboard" id="scoreboard">
       <div class="score-row">
@@ -349,43 +70,20 @@
     <div class="error-state" id="matchupError" style="display:none;"></div>
   </section>
 
-  <section class="panel">
-    <h2 class="panel-title">Weekly Results</h2>
-    <div class="field-group" style="margin-bottom:20px; max-width:220px;">
-      <label for="weekSelect">Select Week</label>
-      <select id="weekSelect"><option>Loading...</option></select>
-    </div>
-    <div id="weekResultsContainer">
-      <div class="empty-state">Select a week to see predicted vs. actual results.</div>
-    </div>
-  </section>
-
-  <section class="panel">
-    <h2 class="panel-title">Power Rankings</h2>
-    <div id="rankingsContainer">
-      <div class="empty-state">Loading rankings...</div>
+  <section class="panel" id="accuracyPanel">
+    <h2 class="panel-title">Season Accuracy</h2>
+    <div class="stat-strip" id="accuracyStrip">
+      <div class="empty-state">Loading...</div>
     </div>
   </section>
 
   <footer>Built by Fletcher &middot; updates automatically from live season data</footer>
 </div>
 
+<script src="common.js"></script>
 <script>
 (function () {
-  const DATA_BASE = "data/";
-
-  const state = { predictions: null, rankings: null, teams: null };
-
-  function fmtSigned(n) {
-    const v = Number(n);
-    return (v >= 0 ? "+" : "") + v.toFixed(1);
-  }
-
-  async function loadJSON(name) {
-    const res = await fetch(DATA_BASE + name, { cache: "no-store" });
-    if (!res.ok) throw new Error("Failed to load " + name + " (" + res.status + ")");
-    return res.json();
-  }
+  const state = { predictions: null, teams: null };
 
   function populateTeamSelects(teams) {
     const homeSel = document.getElementById("homeSelect");
@@ -447,36 +145,6 @@
     boardEl.classList.add("visible");
   }
 
-  function renderRankings(rankings) {
-    const container = document.getElementById("rankingsContainer");
-    if (!rankings || rankings.length === 0) {
-      container.innerHTML = '<div class="empty-state">No rankings available yet.</div>';
-      return;
-    }
-
-    let html = "<table><thead><tr>" +
-      "<th>Rank</th><th>Team</th><th class='num'>Rating</th><th class='num'>Games</th>" +
-      "</tr></thead><tbody>";
-
-    rankings.forEach(function (r) {
-      const rankClass = r.rank <= 10 ? "rank-cell top" : "rank-cell";
-      html += "<tr>" +
-        "<td class='" + rankClass + "'>" + r.rank + "</td>" +
-        "<td class='team-cell'>" + r.team + "</td>" +
-        "<td class='num'>" + fmtSigned(r.composite_rating) + "</td>" +
-        "<td class='num'>" + r.games_played + "</td>" +
-        "</tr>";
-    });
-    html += "</tbody></table>";
-    container.innerHTML = html;
-  }
-
-  function renderUpdatedBadge(meta) {
-    const el = document.getElementById("updatedBadge");
-    el.textContent = meta.season + " SEASON \u00b7 UPDATED " + meta.updated_at +
-      " \u00b7 " + meta.games_processed + " GAMES PROCESSED";
-  }
-
   function renderAccuracySummary(summary) {
     const el = document.getElementById("accuracyStrip");
     if (!summary || summary.games_graded === 0) {
@@ -490,78 +158,21 @@
       '<div class="stat-item"><span class="stat-label">Avg Total Error</span><span class="stat-value">' + summary.avg_total_error + '</span></div>';
   }
 
-  async function populateWeekSelect(availableWeeks) {
-    const sel = document.getElementById("weekSelect");
-    sel.innerHTML = "";
-    if (!availableWeeks || availableWeeks.length === 0) {
-      sel.innerHTML = '<option>No weeks available yet</option>';
-      return;
-    }
-    availableWeeks.slice().reverse().forEach(function (w) {
-      const opt = document.createElement("option");
-      opt.value = w;
-      opt.textContent = "Week " + w;
-      sel.appendChild(opt);
-    });
-    sel.addEventListener("change", function () { loadWeekResults(sel.value); });
-    loadWeekResults(sel.value);
-  }
-
-  async function loadWeekResults(week) {
-    const container = document.getElementById("weekResultsContainer");
-    container.innerHTML = '<div class="empty-state">Loading week ' + week + '...</div>';
-    try {
-      const snap = await loadJSON("history/week_" + week + ".json");
-      if (!snap.games || snap.games.length === 0) {
-        container.innerHTML = '<div class="empty-state">No games found for this week.</div>';
-        return;
-      }
-      let html = "<table><thead><tr>" +
-        "<th>Matchup</th><th>Predicted</th><th>Actual</th><th>Result</th>" +
-        "</tr></thead><tbody>";
-      snap.games.forEach(function (g) {
-        const predStr = g.home + " " + g.predicted_home_score.toFixed(1) + " - " +
-          g.predicted_away_score.toFixed(1) + " " + g.away;
-        let actualStr = "\u2014";
-        let badge = '<span class="result-badge pending">Pending</span>';
-        if (g.graded) {
-          actualStr = g.home + " " + g.actual_home_score + " - " + g.actual_away_score + " " + g.away;
-          const actualMargin = g.actual_home_score - g.actual_away_score;
-          const correct = (g.predicted_spread > 0) === (actualMargin > 0);
-          badge = correct
-            ? '<span class="result-badge correct">Correct</span>'
-            : '<span class="result-badge incorrect">Incorrect</span>';
-        }
-        html += "<tr><td class='team-cell'>" + g.home + " vs " + g.away + "</td>" +
-          "<td>" + predStr + "</td><td>" + actualStr + "</td><td>" + badge + "</td></tr>";
-      });
-      html += "</tbody></table>";
-      container.innerHTML = html;
-    } catch (err) {
-      container.innerHTML = '<div class="error-state">Could not load week ' + week + ': ' + err.message + '</div>';
-    }
-  }
-
   async function init() {
     try {
-      const [predictions, rankings, teams, lastUpdated, summary, availableWeeks] = await Promise.all([
+      const [predictions, teams, lastUpdated, summary] = await Promise.all([
         loadJSON("predictions.json"),
-        loadJSON("rankings.json"),
         loadJSON("teams.json"),
         loadJSON("last_updated.json"),
-        loadJSON("history/summary.json").catch(function () { return null; }),
-        loadJSON("history/weeks_available.json").catch(function () { return []; })
+        loadJSON("history/summary.json").catch(function () { return null; })
       ]);
 
       state.predictions = predictions;
-      state.rankings = rankings;
       state.teams = teams;
 
       populateTeamSelects(teams);
-      renderRankings(rankings);
-      renderUpdatedBadge(lastUpdated);
+      renderUpdatedBadge("updatedBadge", lastUpdated);
       renderAccuracySummary(summary);
-      populateWeekSelect(availableWeeks);
 
       document.getElementById("predictBtn").disabled = false;
       document.getElementById("predictBtn").addEventListener("click", function () {
@@ -571,7 +182,7 @@
       });
     } catch (err) {
       document.getElementById("updatedBadge").textContent = "DATA UNAVAILABLE";
-      document.getElementById("rankingsContainer").innerHTML =
+      document.getElementById("accuracyStrip").innerHTML =
         '<div class="error-state">Could not load data: ' + err.message + '</div>';
       console.error(err);
     }

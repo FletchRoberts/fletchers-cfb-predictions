@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Results &middot; Fletcher's CFB Predictions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <span class="nav-brand">Fletcher's <span class="accent">CFB</span> Predictions</span>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Predictor</a>
+      <a href="rankings.html" class="nav-link">Rankings</a>
+      <a href="weekly.html" class="nav-link active">Weekly Results</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <h1 class="page-title">Weekly Results</h1>
+
+  <section class="panel">
+    <div class="field-group" style="margin-bottom:20px; max-width:220px;">
+      <label for="weekSelect">Select Week</label>
+      <select id="weekSelect"><option>Loading...</option></select>
+    </div>
+    <div id="weekResultsContainer">
+      <div class="empty-state">Select a week to see predicted vs. actual results.</div>
+    </div>
+  </section>
+
+  <footer>Built by Fletcher &middot; updates automatically from live season data</footer>
+</div>
+
+<script src="common.js"></script>
+<script>
+(function () {
+  async function loadWeekResults(week) {
+    const container = document.getElementById("weekResultsContainer");
+    container.innerHTML = '<div class="empty-state">Loading week ' + week + '...</div>';
+    try {
+      const snap = await loadJSON("history/week_" + week + ".json");
+      if (!snap.games || snap.games.length === 0) {
+        container.innerHTML = '<div class="empty-state">No games found for this week.</div>';
+        return;
+      }
+      let html = "<table><thead><tr>" +
+        "<th>Matchup</th><th>Predicted</th><th>Actual</th><th>Result</th>" +
+        "</tr></thead><tbody>";
+      snap.games.forEach(function (g) {
+        const predStr = g.home + " " + g.predicted_home_score.toFixed(1) + " - " +
+          g.predicted_away_score.toFixed(1) + " " + g.away;
+        let actualStr = "\u2014";
+        let badge = '<span class="result-badge pending">Pending</span>';
+        if (g.graded) {
+          actualStr = g.home + " " + g.actual_home_score + " - " + g.actual_away_score + " " + g.away;
+          const actualMargin = g.actual_home_score - g.actual_away_score;
+          const correct = (g.predicted_spread > 0) === (actualMargin > 0);
+          badge = correct
+            ? '<span class="result-badge correct">Correct</span>'
+            : '<span class="result-badge incorrect">Incorrect</span>';
+        }
+        html += "<tr><td class='team-cell'>" + g.home + " vs " + g.away + "</td>" +
+          "<td>" + predStr + "</td><td>" + actualStr + "</td><td>" + badge + "</td></tr>";
+      });
+      html += "</tbody></table>";
+      container.innerHTML = html;
+    } catch (err) {
+      container.innerHTML = '<div class="error-state">Could not load week ' + week + ': ' + err.message + '</div>';
+    }
+  }
+
+  async function populateWeekSelect(availableWeeks) {
+    const sel = document.getElementById("weekSelect");
+    sel.innerHTML = "";
+    if (!availableWeeks || availableWeeks.length === 0) {
+      sel.innerHTML = '<option>No weeks available yet</option>';
+      document.getElementById("weekResultsContainer").innerHTML =
+        '<div class="empty-state">No weekly snapshots yet -- check back once the season starts.</div>';
+      return;
+    }
+    availableWeeks.slice().reverse().forEach(function (w) {
+      const opt = document.createElement("option");
+      opt.value = w;
+      opt.textContent = "Week " + w;
+      sel.appendChild(opt);
+    });
+    sel.addEventListener("change", function () { loadWeekResults(sel.value); });
+    loadWeekResults(sel.value);
+  }
+
+  async function init() {
+    try {
+      const availableWeeks = await loadJSON("history/weeks_available.json").catch(function () { return []; });
+      populateWeekSelect(availableWeeks);
+    } catch (err) {
+      document.getElementById("weekResultsContainer").innerHTML =
+        '<div class="error-state">Could not load data: ' + err.message + '</div>';
+      console.error(err);
+    }
+  }
+  init();
+})();
+</script>
+</body>
+</html>

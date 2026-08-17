@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rankings &middot; Fletcher's CFB Predictions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <span class="nav-brand">Fletcher's <span class="accent">CFB</span> Predictions</span>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Predictor</a>
+      <a href="rankings.html" class="nav-link active">Rankings</a>
+      <a href="weekly.html" class="nav-link">Weekly Results</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <h1 class="page-title">Power Rankings</h1>
+  <div class="updated-badge" id="updatedBadge" style="margin-bottom:24px;">loading...</div>
+
+  <section class="panel">
+    <div id="rankingsContainer">
+      <div class="empty-state">Loading rankings...</div>
+    </div>
+  </section>
+
+  <footer>Built by Fletcher &middot; updates automatically from live season data</footer>
+</div>
+
+<script src="common.js"></script>
+<script>
+(function () {
+  function renderRankings(rankings) {
+    const container = document.getElementById("rankingsContainer");
+    if (!rankings || rankings.length === 0) {
+      container.innerHTML = '<div class="empty-state">No rankings available yet.</div>';
+      return;
+    }
+    let html = "<table><thead><tr>" +
+      "<th>Rank</th><th>Team</th><th class='num'>Rating</th><th class='num'>Games</th>" +
+      "</tr></thead><tbody>";
+    rankings.forEach(function (r) {
+      const rankClass = r.rank <= 10 ? "rank-cell top" : "rank-cell";
+      html += "<tr>" +
+        "<td class='" + rankClass + "'>" + r.rank + "</td>" +
+        "<td class='team-cell'>" + r.team + "</td>" +
+        "<td class='num'>" + fmtSigned(r.composite_rating) + "</td>" +
+        "<td class='num'>" + r.games_played + "</td>" +
+        "</tr>";
+    });
+    html += "</tbody></table>";
+    container.innerHTML = html;
+  }
+
+  async function init() {
+    try {
+      const [rankings, lastUpdated] = await Promise.all([
+        loadJSON("rankings.json"),
+        loadJSON("last_updated.json")
+      ]);
+      renderRankings(rankings);
+      renderUpdatedBadge("updatedBadge", lastUpdated);
+    } catch (err) {
+      document.getElementById("updatedBadge").textContent = "DATA UNAVAILABLE";
+      document.getElementById("rankingsContainer").innerHTML =
+        '<div class="error-state">Could not load data: ' + err.message + '</div>';
+      console.error(err);
+    }
+  }
+  init();
+})();
+</script>
+</body>
+</html>
