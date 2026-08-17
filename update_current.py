@@ -14,6 +14,8 @@ Output: JSON files in site/data/, which the static site reads directly.
 import os
 import json
 import time
+import glob
+import re
 import requests
 import numpy as np
 import pandas as pd
@@ -34,7 +36,9 @@ PRIOR_SEASON = CURRENT_SEASON - 1
 
 MODELS_DIR = "models"
 OUTPUT_DIR = "site/data"
+HISTORY_DIR = "site/data/history"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
+os.makedirs(HISTORY_DIR, exist_ok=True)
 
 
 def fetch(endpoint, params, max_retries=3, timeout=30):
@@ -79,6 +83,110 @@ def compute_srs(game_list):
             next_ratings[t] -= avg
         ratings = next_ratings
     return ratings, team_games
+
+
+def manage_weekly_snapshots(games_current_raw, predictions):
+    """Snapshots the next fully-upcoming week's predictions (once, immutably),
+    grades any existing snapshots whose games have since completed, and
+    recomputes the season-wide accuracy summary. Never overwrites a prediction
+    once saved -- only ever fills in actual results after the fact."""
+    all_fbs_games = [g for g in games_current_raw if (
+        g.get("seasonType") == "regular" and g.get("week") is not None
+        and g.get("homeClassification") == "fbs" and g.get("awayClassification") == "fbs")]
+
+    existing_snapshot_weeks = set()
+    for p in glob.glob(f"{HISTORY_DIR}/week_*.json"):
+        m = re.search(r"week_(\d+)\.json", p)
+        if m:
+            existing_snapshot_weeks.add(int(m.group(1)))
+
+    # ---- 1. Snapshot the next fully-upcoming week, if there is one and it's not done yet ----
+    weeks_present = sorted(set(g["week"] for g in all_fbs_games))
+    for w in weeks_present:
+        week_games = [g for g in all_fbs_games if g["week"] == w]
+        any_completed = any(g.get("completed") for g in week_games)
+        if any_completed or w in existing_snapshot_weeks:
+            continue  # either already happened (can't honestly snapshot in hindsight) or already saved
+
+        snapshot_games = []
+        for g in week_games:
+            home, away = g["homeTeam"], g["awayTeam"]
+            pred = predictions.get(f"{home}|{away}")
+            if not pred:
+                continue
+            snapshot_games.append({
+                "game_id": g["id"], "home": home, "away": away,
+                "start_date": g.get("startDate"),
+                "predicted_home_score": pred["predicted_home_score"],
+                "predicted_away_score": pred["predicted_away_score"],
+                "predicted_spread": pred["predicted_spread"],
+                "predicted_total": pred["predicted_total"],
+                "favorite": pred["favorite"],
+                "actual_home_score": None, "actual_away_score": None,
+                "graded": False
+            })
+        with open(f"{HISTORY_DIR}/week_{w}.json", "w") as f:
+            json.dump({
+                "week": w, "season": CURRENT_SEASON,
+                "snapshotted_at": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
+                "games": snapshot_games
+            }, f, indent=2)
+        print(f"  Snapshotted {len(snapshot_games)} games for week {w}.")
+        break  # only the nearest upcoming week -- keeps snapshots close to kickoff, not stale
+
+    # ---- 2. Grade any snapshots whose games have since completed ----
+    completed_by_id = {g["id"]: g for g in all_fbs_games if g.get("completed")}
+    for path in sorted(glob.glob(f"{HISTORY_DIR}/week_*.json")):
+        with open(path) as f:
+            snap = json.load(f)
+        changed = False
+        for g in snap["games"]:
+            if g["graded"]:
+                continue
+            actual = completed_by_id.get(g["game_id"])
+            if actual:
+                g["actual_home_score"] = actual["homePoints"]
+                g["actual_away_score"] = actual["awayPoints"]
+                g["graded"] = True
+                changed = True
+        if changed:
+            with open(path, "w") as f:
+                json.dump(snap, f, indent=2)
+            print(f"  Graded newly-completed games in {path}.")
+
+    # ---- 3. Manifest of available weeks (for the site's dropdown) ----
+    available_weeks = sorted(int(re.search(r"week_(\d+)\.json", p).group(1))
+                              for p in glob.glob(f"{HISTORY_DIR}/week_*.json"))
+    with open(f"{HISTORY_DIR}/weeks_available.json", "w") as f:
+        json.dump(available_weeks, f)
+
+    # ---- 4. Season-wide accuracy summary across every graded game so far ----
+    total_games, correct_winner = 0, 0
+    margin_err_sum, total_err_sum = 0.0, 0.0
+    for path in glob.glob(f"{HISTORY_DIR}/week_*.json"):
+        with open(path) as f:
+            snap = json.load(f)
+        for g in snap["games"]:
+            if not g["graded"]:
+                continue
+            actual_margin = g["actual_home_score"] - g["actual_away_score"]
+            actual_total = g["actual_home_score"] + g["actual_away_score"]
+            total_games += 1
+            if (g["predicted_spread"] > 0) == (actual_margin > 0):
+                correct_winner += 1
+            margin_err_sum += abs(g["predicted_spread"] - actual_margin)
+            total_err_sum += abs(g["predicted_total"] - actual_total)
+
+    summary = {
+        "games_graded": total_games,
+        "win_accuracy_pct": round(100 * correct_winner / total_games, 1) if total_games else None,
+        "avg_margin_error": round(margin_err_sum / total_games, 2) if total_games else None,
+        "avg_total_error": round(total_err_sum / total_games, 2) if total_games else None,
+        "updated_at": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime())
+    }
+    with open(f"{HISTORY_DIR}/summary.json", "w") as f:
+        json.dump(summary, f, indent=2)
+    print(f"  Season summary: {summary}")
 
 
 def main():
@@ -417,6 +525,12 @@ def main():
             "predicted_total": round(float(final_totals[i]), 1),
             "favorite": home if final_margins[i] > 0 else away
         }
+
+    # -----------------------------------------------------------------
+    # Weekly prediction snapshots (for grading against real results later)
+    # -----------------------------------------------------------------
+    print("\nManaging weekly prediction snapshots...")
+    manage_weekly_snapshots(games_current_raw, predictions)
 
     # -----------------------------------------------------------------
     # Power rankings (vs. league-average opponent, same as Colab Part 5)
