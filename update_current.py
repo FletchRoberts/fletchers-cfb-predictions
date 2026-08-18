@@ -299,56 +299,137 @@ def main():
     # -----------------------------------------------------------------
     print(f"\nPulling {CURRENT_SEASON} data...")
     games_current_raw = fetch("/games", {"year": CURRENT_SEASON})
-    talent_current = fetch("/talent", {"year": CURRENT_SEASON})
     ppa_current = fetch("/ppa/games", {"year": CURRENT_SEASON})
 
     games_current = filter_fbs_games(games_current_raw)
     print(f"  {len(games_current)} completed FBS games so far this season.")
 
-    talent_raw = {r["team"]: r["talent"] for r in talent_current if r.get("talent") is not None}
-
-    if len(talent_raw) < 20:  # sanity threshold -- a real season has ~130 teams with talent data
-        print(f"  Only {len(talent_raw)} teams found in {CURRENT_SEASON} talent data "
-              f"(expected ~130) -- likely means this season's Talent Composite isn't "
-              f"published yet. Falling back to {PRIOR_SEASON}'s talent data as a cold-start "
-              f"proxy (same principle as our prior-season PPG/advanced-stats fallbacks).")
-        talent_prior_season = fetch("/talent", {"year": PRIOR_SEASON})
-        talent_raw = {r["team"]: r["talent"] for r in talent_prior_season if r.get("talent") is not None}
-
-        if len(talent_raw) < 20:
-            raise RuntimeError(
-                f"No usable talent data found for either {CURRENT_SEASON} or {PRIOR_SEASON} "
-                f"({len(talent_raw)} teams). Cannot compute any team ratings without this. "
-                f"Check the CFBD /talent endpoint directly for both years before re-running."
-            )
+    # Full FBS team list -- previously sourced from Talent's team keys as a side
+    # effect; now pulled directly from the dedicated endpoint, which is a cleaner
+    # fit for this specific job regardless of the Talent removal below.
+    fbs_teams_raw = fetch("/teams/fbs", {"year": CURRENT_SEASON})
+    fbs_team_names = sorted(t["school"] for t in fbs_teams_raw if t.get("school"))
+    print(f"  {len(fbs_team_names)} FBS teams found.")
 
     # -----------------------------------------------------------------
-    # Gen 1 current ratings (SRS + Talent blend)
+    # Gen 1 current ratings (in-season SRS + a multi-source cold-start blend)
+    #
+    # Talent Composite has been REMOVED from the cold-start blend. It only
+    # reflects roster quality as of last season's recruiting cycle, with no
+    # way to capture transfer portal turnover -- given how much rosters
+    # change year to year now, that made it a poor preseason anchor (this
+    # was the direct cause of the Clemson-at-#7 problem that started this
+    # investigation). Replaced with a blend of Poll, SP+, FPI, and CFBD's
+    # own SRS -- all assumed (not yet fully proven) to reflect genuinely
+    # current-season state, per our SP+/FPI weekly-update discussion.
     # -----------------------------------------------------------------
     print("\nComputing Gen 1 current ratings...")
     full_ratings, team_games = compute_srs(games_current)
-    all_teams = sorted(team_games.keys()) if team_games else sorted(talent_raw.keys())
-    # Include teams with talent data even if they haven't played yet (e.g. week 0/1)
-    all_teams = sorted(set(all_teams) | set(talent_raw.keys()))
+    all_teams = sorted(set(team_games.keys()) | set(fbs_team_names))
 
-    talent_vals = np.array([talent_raw[t] for t in all_teams if t in talent_raw])
-    talent_mean, talent_std = talent_vals.mean(), talent_vals.std()
     if len(full_ratings) > 0:
         srs_vals = np.array(list(full_ratings.values()))
         srs_std = srs_vals.std() if srs_vals.std() > 1e-6 else 1.0
     else:
         srs_std = 15.0  # reasonable fallback scale if literally zero games played yet anywhere
 
-    def talent_prior(team):
-        if team not in talent_raw:
+    # ---- Preseason poll prior (AP Top 25 + Coaches Poll) ----
+    # NOTE: assumed to be published under week=1 in CFBD's indexing -- not yet
+    # empirically confirmed against a real live run.
+    # KNOWN LIMITATION: only the official Top 25 per poll is available; every
+    # team outside the Top 25 gets an identical floor value, no granularity
+    # between "just outside the rankings" and "no support at all."
+    print("Fetching preseason polls (AP Top 25 + Coaches Poll)...")
+    ap_points, coaches_points = {}, {}
+    try:
+        poll_resp = fetch("/rankings", {"year": CURRENT_SEASON, "week": 1, "seasonType": "regular"})
+        if poll_resp:
+            for poll in poll_resp[0].get("polls", []):
+                name = poll.get("poll", "")
+                if name == "AP Top 25":
+                    for r in poll["ranks"]:
+                        ap_points[r["school"]] = r["points"]
+                elif name == "Coaches Poll":
+                    for r in poll["ranks"]:
+                        coaches_points[r["school"]] = r["points"]
+            print(f"  AP Top 25: {len(ap_points)} teams. Coaches Poll: {len(coaches_points)} teams.")
+        else:
+            print("  WARNING: no ranking data returned for week 1 -- poll prior will be zero-weighted.")
+    except requests.exceptions.RequestException as e:
+        print(f"  WARNING: poll fetch failed ({e}) -- poll prior will be zero-weighted this run.")
+
+    def poll_prior(team):
+        if not ap_points and not coaches_points:
             return 0.0
-        return ((talent_raw[team] - talent_mean) / talent_std) * srs_std
+        ap_vals = np.array([ap_points.get(t, 0) for t in all_teams])
+        coaches_vals = np.array([coaches_points.get(t, 0) for t in all_teams])
+        ap_z = (ap_points.get(team, 0) - ap_vals.mean()) / (ap_vals.std() if ap_vals.std() > 1e-6 else 1.0)
+        coaches_z = (coaches_points.get(team, 0) - coaches_vals.mean()) / (coaches_vals.std() if coaches_vals.std() > 1e-6 else 1.0)
+        return ((ap_z + coaches_z) / 2) * srs_std
+
+    # ---- SP+, FPI, CFBD-SRS priors ----
+    # Field names for SP+ are confirmed from a real live test earlier ("rating").
+    # FPI and CFBD-SRS field names are NOT yet empirically confirmed -- built
+    # defensively here: try the expected field name, log a clear warning and
+    # skip that source (rather than crash) if the response shape is different
+    # than assumed.
+    def build_generic_prior(endpoint, field_name, source_label):
+        try:
+            resp = fetch(endpoint, {"year": CURRENT_SEASON})
+        except requests.exceptions.RequestException as e:
+            print(f"  WARNING: {source_label} fetch failed ({e}) -- this source will be zero-weighted.")
+            return {}
+        values = {}
+        for rec in resp:
+            team = rec.get("team")
+            val = rec.get(field_name)
+            if team is not None and val is not None:
+                values[team] = val
+        if len(values) < 20:
+            print(f"  WARNING: only {len(values)} teams found for {source_label} "
+                  f"(field '{field_name}') -- expected ~130. Response shape may not "
+                  f"match what was assumed; check a raw sample if this persists. "
+                  f"This source will be effectively zero-weighted this run.")
+        else:
+            print(f"  {source_label}: {len(values)} teams found.")
+        return values
+
+    print("Fetching SP+, FPI, and CFBD-SRS...")
+    sp_raw = build_generic_prior("/ratings/sp", "rating", "SP+")
+    fpi_raw = build_generic_prior("/ratings/fpi", "fpi", "FPI")
+    cfbd_srs_raw = build_generic_prior("/ratings/srs", "rating", "CFBD SRS")
+
+    def generic_prior(team, raw_dict):
+        if not raw_dict:
+            return None
+        vals = np.array([raw_dict[t] for t in all_teams if t in raw_dict])
+        if len(vals) < 2 or vals.std() < 1e-6:
+            return None
+        if team not in raw_dict:
+            return None
+        return ((raw_dict[team] - vals.mean()) / vals.std()) * srs_std
+
+    def cold_start_prior(team):
+        # Equal-weight average across whichever sources returned usable data
+        # this run. This is a reasonable DEFAULT, not yet backtested/validated
+        # -- worth sweeping properly later, same discipline as every other
+        # blend ratio in this project.
+        components = [
+            poll_prior(team) if (ap_points or coaches_points) else None,
+            generic_prior(team, sp_raw),
+            generic_prior(team, fpi_raw),
+            generic_prior(team, cfbd_srs_raw),
+        ]
+        usable = [c for c in components if c is not None]
+        if not usable:
+            return 0.0  # degenerate case: every source failed this run
+        return sum(usable) / len(usable)
 
     gen1_current = {}
     for team in all_teams:
         gp = len(team_games.get(team, []))
         w = min(gp / GAMES_TO_FULL_TRUST_MARGIN, 1)
-        gen1_current[team] = w * full_ratings.get(team, 0.0) + (1 - w) * talent_prior(team)
+        gen1_current[team] = w * full_ratings.get(team, 0.0) + (1 - w) * cold_start_prior(team)
 
     # -----------------------------------------------------------------
     # Gen 3 current team profiles (rolling PPG/PPA)
