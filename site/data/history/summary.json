@@ -1,7 +1,7 @@
 {
-  "games_graded": 0,
-  "win_accuracy_pct": null,
-  "avg_margin_error": null,
-  "avg_total_error": null,
-  "updated_at": "2026-08-29 08:01:35 UTC"
+  "games_graded": 6,
+  "win_accuracy_pct": 66.7,
+  "avg_margin_error": 12.25,
+  "avg_total_error": 13.07,
+  "updated_at": "2026-08-30 08:01:20 UTC"
 }

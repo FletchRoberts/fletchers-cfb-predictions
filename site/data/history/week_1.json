@@ -13,9 +13,9 @@
       "predicted_spread": 1.6,
       "predicted_total": 50.5,
       "favorite": "TCU",
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false
+      "actual_home_score": 10,
+      "actual_away_score": 15,
+      "graded": true
     },
     {
       "game_id": 401864494,
@@ -27,9 +27,9 @@
       "predicted_spread": 31.1,
       "predicted_total": 55.9,
       "favorite": "USC",
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false
+      "actual_home_score": 42,
+      "actual_away_score": 26,
+      "graded": true
     },
     {
       "game_id": 401858202,
@@ -41,9 +41,9 @@
       "predicted_spread": 4.0,
       "predicted_total": 53.6,
       "favorite": "Virginia",
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false
+      "actual_home_score": 34,
+      "actual_away_score": 8,
+      "graded": true
     },
     {
       "game_id": 401858201,
@@ -55,9 +55,9 @@
       "predicted_spread": 15.1,
       "predicted_total": 52.4,
       "favorite": "Stanford",
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false
+      "actual_home_score": 37,
+      "actual_away_score": 27,
+      "graded": true
     },
     {
       "game_id": 401864570,
@@ -69,9 +69,9 @@
       "predicted_spread": 34.1,
       "predicted_total": 55.8,
       "favorite": "Florida State",
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false
+      "actual_home_score": 34,
+      "actual_away_score": 17,
+      "graded": true
     },
     {
       "game_id": 401862693,
@@ -83,9 +83,9 @@
       "predicted_spread": 1.6,
       "predicted_total": 60.8,
       "favorite": "UNLV",
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false
+      "actual_home_score": 21,
+      "actual_away_score": 27,
+      "graded": true
     },
     {
       "game_id": 401858423,
