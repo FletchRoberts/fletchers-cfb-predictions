@@ -204,7 +204,7 @@
   },
   {
     "team": "Memphis",
-    "composite_rating": 1.12,
+    "composite_rating": 1.16,
     "gen1": -0.1,
     "games_played": 1,
     "rank": 30
@@ -778,7 +778,7 @@
   },
   {
     "team": "New Mexico State",
-    "composite_rating": -1.18,
+    "composite_rating": -1.14,
     "gen1": -0.86,
     "games_played": 1,
     "rank": 112
