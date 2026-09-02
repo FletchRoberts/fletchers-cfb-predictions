@@ -110,6 +110,17 @@ def manage_weekly_snapshots(games_current_raw, predictions):
     is_sunday = now_eastern.weekday() == 6    # Monday=0 ... Sunday=6
     is_wednesday = now_eastern.weekday() == 2  # Monday=0 ... Wednesday=2
 
+    # Manual override for testing/forcing a snapshot outside the normal
+    # schedule -- set via the "force_snapshot" checkbox when manually running
+    # the workflow. Treats today as Wednesday (creates and finalizes
+    # immediately), regardless of the actual day. Does NOT affect the
+    # scheduled daily run, which never sets this env var.
+    force_snapshot = os.environ.get("FORCE_SNAPSHOT", "").lower() == "true"
+    if force_snapshot:
+        print("  FORCE_SNAPSHOT is set -- bypassing the Sunday/Wednesday gate "
+              "for this run (treating today as Wednesday).")
+        is_wednesday = True
+
     weeks_present = sorted(set(g["week"] for g in all_fbs_games))
     for w in weeks_present:
         week_games = [g for g in all_fbs_games if g["week"] == w]
