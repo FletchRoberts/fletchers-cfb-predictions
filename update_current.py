@@ -136,7 +136,13 @@ def manage_weekly_snapshots(games_current_raw, predictions):
                 for line in g.get("lines", []):
                     if line.get("spread") is not None:
                         try:
-                            spreads.append(float(line["spread"]))
+                            # CFBD's raw spread uses the traditional betting convention
+                            # (negative = home favored) -- confirmed via real-world
+                            # sportsbook-derived documentation, opposite of our own
+                            # predicted_spread convention (positive = home favored).
+                            # Negate here, once, at the source, so every downstream
+                            # use (grading, display) works in one consistent convention.
+                            spreads.append(-float(line["spread"]))
                         except (TypeError, ValueError):
                             pass
                     if line.get("overUnder") is not None:
@@ -259,7 +265,12 @@ def manage_weekly_snapshots(games_current_raw, predictions):
                 actual_total = actual["homePoints"] + actual["awayPoints"]
 
                 if g.get("vegas_spread") is not None:
-                    we_pick_home = g["predicted_spread"] > 0
+                    # Compare OUR prediction against VEGAS'S line, not against zero --
+                    # we're picking whichever side we think will outperform the line,
+                    # same logic already correctly used for O/U below. Comparing to
+                    # zero only asked "do we predict home wins outright," which is a
+                    # different (and wrong) question from "do we think home covers."
+                    we_pick_home = g["predicted_spread"] > g["vegas_spread"]
                     g["ats_correct"] = (actual_margin > g["vegas_spread"]) if we_pick_home \
                         else (actual_margin < g["vegas_spread"])
                 if g.get("vegas_total") is not None:
