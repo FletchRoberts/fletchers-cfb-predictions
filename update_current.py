@@ -99,31 +99,49 @@ def manage_weekly_snapshots(games_current_raw, predictions):
         g.get("seasonType") == "regular" and g.get("week") is not None
         and g.get("homeClassification") == "fbs" and g.get("awayClassification") == "fbs")]
 
-    existing_snapshot_weeks = set()
-    for p in glob.glob(f"{HISTORY_DIR}/week_*.json"):
-        m = re.search(r"week_(\d+)\.json", p)
-        if m:
-            existing_snapshot_weeks.add(int(m.group(1)))
-
-    # ---- 1. Snapshot the next fully-upcoming week, but ONLY on Wednesday (Eastern) ----
-    # Wednesday specifically: late enough in the week that ratings reflect the
-    # prior weekend's results, early enough that it's before Thursday/Friday/
-    # Saturday games that week. Using Eastern time (not UTC) since that's the
-    # broadcast-standard reference for CFB scheduling, and this correctly
-    # handles the EST/EDT switch via zoneinfo rather than a fixed UTC offset.
+    # ---- 1. Two-phase snapshot: Sunday creates a preliminary capture (early
+    # Vegas lines, usable Mon/Tue), Wednesday overwrites it with a finalized
+    # capture (freshest ratings + freshest Vegas lines, right before that
+    # week's games start). If Sunday's run is ever missed for any reason,
+    # Wednesday creates AND finalizes in one step instead -- nothing depends
+    # on Sunday succeeding. Once finalized, permanently locked; only grading
+    # touches it after that point.
     now_eastern = datetime.now(ZoneInfo("America/New_York"))
+    is_sunday = now_eastern.weekday() == 6    # Monday=0 ... Sunday=6
     is_wednesday = now_eastern.weekday() == 2  # Monday=0 ... Wednesday=2
 
     weeks_present = sorted(set(g["week"] for g in all_fbs_games))
     for w in weeks_present:
         week_games = [g for g in all_fbs_games if g["week"] == w]
         any_completed = any(g.get("completed") for g in week_games)
-        if any_completed or w in existing_snapshot_weeks:
-            continue  # either already happened (can't honestly snapshot in hindsight) or already saved
-        if not is_wednesday:
-            print(f"  Week {w} is upcoming and not yet snapshotted, but today "
-                  f"({now_eastern.strftime('%A')}) isn't Wednesday -- waiting.")
-            break
+        if any_completed:
+            continue  # already happened -- can't honestly snapshot in hindsight
+
+        snapshot_path = f"{HISTORY_DIR}/week_{w}.json"
+        existing_snapshot = None
+        if os.path.exists(snapshot_path):
+            with open(snapshot_path) as f:
+                existing_snapshot = json.load(f)
+
+        if existing_snapshot and existing_snapshot.get("finalized"):
+            continue  # locked, permanently done for this week
+
+        if existing_snapshot is None:
+            if not (is_sunday or is_wednesday):
+                print(f"  Week {w} has no snapshot yet, but today "
+                      f"({now_eastern.strftime('%A')}) is neither Sunday nor "
+                      f"Wednesday -- waiting.")
+                break
+            will_finalize = is_wednesday
+        else:
+            if not is_wednesday:
+                print(f"  Week {w} has a preliminary snapshot; waiting for "
+                      f"Wednesday to finalize it.")
+                break
+            will_finalize = True
+
+        print(f"  {'Finalizing' if will_finalize else 'Creating preliminary snapshot for'} "
+              f"week {w}...")
 
         # Pull Vegas lines for this week, to store alongside each game for later
         # ATS/O-U grading. Built defensively -- field names not previously
@@ -173,14 +191,16 @@ def manage_weekly_snapshots(games_current_raw, predictions):
                 "actual_home_score": None, "actual_away_score": None,
                 "graded": False, "ats_correct": None, "ou_correct": None
             })
-        with open(f"{HISTORY_DIR}/week_{w}.json", "w") as f:
+        with open(snapshot_path, "w") as f:
             json.dump({
                 "week": w, "season": CURRENT_SEASON,
                 "snapshotted_at": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
+                "finalized": will_finalize,
                 "games": snapshot_games
             }, f, indent=2)
-        print(f"  Snapshotted {len(snapshot_games)} games for week {w} (Wednesday Eastern).")
-        break  # only the nearest upcoming week
+        print(f"  {'Finalized' if will_finalize else 'Preliminary snapshot saved for'} "
+              f"week {w} ({len(snapshot_games)} games).")
+        break  # only the nearest eligible week per run
 
     # ---- 2. Grade any snapshots whose games have since completed ----
     completed_by_id = {g["id"]: g for g in all_fbs_games if g.get("completed")}
