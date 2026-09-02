@@ -17,6 +17,11 @@ on:
         required: false
         type: boolean
         default: false
+      force_regrade:
+        description: "Recompute ATS/O-U correctness for every already-graded game using the current logic, without touching predictions, Vegas lines, or actual scores. Use this after fixing a grading bug, instead of deleting files."
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write  # required so this workflow can push its commit back to the repo
@@ -42,6 +47,7 @@ jobs:
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
           FORCE_SNAPSHOT: ${{ github.event.inputs.force_snapshot }}
+          FORCE_REGRADE: ${{ github.event.inputs.force_regrade }}
         run: python update_current.py
 
       - name: Commit updated data back to the repo
