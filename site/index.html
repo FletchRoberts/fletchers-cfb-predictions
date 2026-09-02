@@ -36,7 +36,7 @@
         <label for="homeSelect">Home</label>
         <select id="homeSelect"></select>
       </div>
-      <div class="vs-mark">VS</div>
+      <button type="button" class="vs-mark swap-btn" id="swapBtn" title="Swap home and away" aria-label="Swap home and away teams">⇄</button>
       <div class="field-group">
         <label for="awaySelect">Away</label>
         <select id="awaySelect"></select>
@@ -179,6 +179,20 @@
         const home = document.getElementById("homeSelect").value;
         const away = document.getElementById("awaySelect").value;
         renderPrediction(home, away);
+      });
+
+      document.getElementById("swapBtn").addEventListener("click", function () {
+        const homeSel = document.getElementById("homeSelect");
+        const awaySel = document.getElementById("awaySelect");
+        const temp = homeSel.value;
+        homeSel.value = awaySel.value;
+        awaySel.value = temp;
+        // Auto-refresh the prediction if one's already showing, so flipping
+        // home/away immediately reveals the home-field-advantage swing
+        // without needing to click Predict again.
+        if (document.getElementById("scoreboard").classList.contains("visible")) {
+          renderPrediction(homeSel.value, awaySel.value);
+        }
       });
     } catch (err) {
       document.getElementById("updatedBadge").textContent = "DATA UNAVAILABLE";

@@ -30,6 +30,7 @@
       <label for="weekSelect">Select Week</label>
       <select id="weekSelect"><option>Loading...</option></select>
     </div>
+    <div class="stat-strip" id="weekSummaryStrip" style="margin-bottom:18px;"></div>
     <div id="weekResultsContainer">
       <div class="empty-state">Select a week to see predicted vs. actual results.</div>
     </div>
@@ -41,6 +42,44 @@
 <script src="common.js"></script>
 <script>
 (function () {
+  function scoreLine(label, home, away) {
+    return "<div class='score-line'><span class='score-line-label'>" + label + "</span> " +
+      home + " &ndash; " + away + "</div>";
+  }
+
+  function renderWeekSummary(games) {
+    const graded = games.filter(function (g) { return g.graded; });
+    const el = document.getElementById("weekSummaryStrip");
+    if (graded.length === 0) {
+      el.innerHTML = "";
+      return;
+    }
+    const wins = graded.filter(function (g) {
+      return (g.predicted_spread > 0) === ((g.actual_home_score - g.actual_away_score) > 0);
+    }).length;
+    const atsGames = graded.filter(function (g) { return g.ats_correct !== null && g.ats_correct !== undefined; });
+    const atsWins = atsGames.filter(function (g) { return g.ats_correct; }).length;
+    const ouGames = graded.filter(function (g) { return g.ou_correct !== null && g.ou_correct !== undefined; });
+    const ouWins = ouGames.filter(function (g) { return g.ou_correct; }).length;
+
+    let html = '<div class="stat-item"><span class="stat-label">Win Acc.</span><span class="stat-value">' +
+      wins + '/' + graded.length + '</span></div>';
+    if (atsGames.length > 0) {
+      html += '<div class="stat-item"><span class="stat-label">ATS</span><span class="stat-value">' +
+        atsWins + '/' + atsGames.length + '</span></div>';
+    }
+    if (ouGames.length > 0) {
+      html += '<div class="stat-item"><span class="stat-label">O/U</span><span class="stat-value">' +
+        ouWins + '/' + ouGames.length + '</span></div>';
+    }
+    el.innerHTML = html;
+  }
+
+  function resultBadge(correct) {
+    if (correct === null || correct === undefined) return "<span class='result-badge pending'>&mdash;</span>";
+    return correct ? "<span class='result-badge correct'>Yes</span>" : "<span class='result-badge incorrect'>No</span>";
+  }
+
   async function loadWeekResults(week) {
     const container = document.getElementById("weekResultsContainer");
     container.innerHTML = '<div class="empty-state">Loading week ' + week + '...</div>';
@@ -48,31 +87,36 @@
       const snap = await loadJSON("history/week_" + week + ".json");
       if (!snap.games || snap.games.length === 0) {
         container.innerHTML = '<div class="empty-state">No games found for this week.</div>';
+        document.getElementById("weekSummaryStrip").innerHTML = "";
         return;
       }
+      renderWeekSummary(snap.games);
+
       let html = "<table><thead><tr>" +
-        "<th>Matchup</th><th>Predicted</th><th>Actual</th><th>Result</th>" +
+        "<th>Matchup</th><th>Score</th><th>Win</th><th>ATS</th><th>O/U</th>" +
         "</tr></thead><tbody>";
       snap.games.forEach(function (g) {
-        const predStr = g.home + " " + g.predicted_home_score.toFixed(1) + " - " +
-          g.predicted_away_score.toFixed(1) + " " + g.away;
-        let actualStr = "\u2014";
-        let badge = '<span class="result-badge pending">Pending</span>';
+        let scoreCell = scoreLine("Pred", g.predicted_home_score.toFixed(1), g.predicted_away_score.toFixed(1));
+        let winBadge = "<span class='result-badge pending'>&mdash;</span>";
+        let atsBadge = "<span class='result-badge pending'>&mdash;</span>";
+        let ouBadge = "<span class='result-badge pending'>&mdash;</span>";
+
         if (g.graded) {
-          actualStr = g.home + " " + g.actual_home_score + " - " + g.actual_away_score + " " + g.away;
+          scoreCell += scoreLine("Actual", g.actual_home_score, g.actual_away_score);
           const actualMargin = g.actual_home_score - g.actual_away_score;
-          const correct = (g.predicted_spread > 0) === (actualMargin > 0);
-          badge = correct
-            ? '<span class="result-badge correct">Correct</span>'
-            : '<span class="result-badge incorrect">Incorrect</span>';
+          winBadge = resultBadge((g.predicted_spread > 0) === (actualMargin > 0));
+          atsBadge = resultBadge(g.ats_correct);
+          ouBadge = resultBadge(g.ou_correct);
         }
-        html += "<tr><td class='team-cell'>" + g.home + " vs " + g.away + "</td>" +
-          "<td>" + predStr + "</td><td>" + actualStr + "</td><td>" + badge + "</td></tr>";
+
+        html += "<tr><td class='team-cell'>" + g.home + "<br><span class='vs-text'>vs " + g.away + "</span></td>" +
+          "<td>" + scoreCell + "</td><td>" + winBadge + "</td><td>" + atsBadge + "</td><td>" + ouBadge + "</td></tr>";
       });
       html += "</tbody></table>";
       container.innerHTML = html;
     } catch (err) {
       container.innerHTML = '<div class="error-state">Could not load week ' + week + ': ' + err.message + '</div>';
+      document.getElementById("weekSummaryStrip").innerHTML = "";
     }
   }
 
