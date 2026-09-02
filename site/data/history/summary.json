@@ -3,5 +3,9 @@
   "win_accuracy_pct": 66.7,
   "avg_margin_error": 12.25,
   "avg_total_error": 13.07,
-  "updated_at": "2026-09-01 08:01:32 UTC"
+  "ats_games_graded": 0,
+  "ats_win_pct": null,
+  "ou_games_graded": 0,
+  "ou_win_pct": null,
+  "updated_at": "2026-09-02 00:34:12 UTC"
 }
