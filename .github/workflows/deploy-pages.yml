@@ -1,12 +1,17 @@
 name: Deploy Site to GitHub Pages
 
-# Runs whenever anything changes on main -- including the daily bot commits
-# from update.yml (site/data/*.json) and any manual edits to site/index.html.
-# This is what actually makes the site go live/refresh; update.yml only
-# updates the DATA, this workflow is what PUBLISHES it.
+# Two ways this runs, on purpose:
+# 1. on: push -- for manual edits you make directly (this already worked correctly).
+# 2. on: schedule -- a backup specifically for update.yml's daily bot commit, since
+#    GitHub does NOT let a GITHUB_TOKEN-authored commit trigger other workflows
+#    (including this one) via push, even though it's configured to listen for
+#    pushes. Scheduling this an hour after update.yml's 8:00 UTC run sidesteps
+#    that limitation entirely, rather than needing a PAT to work around it.
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: "0 9 * * *"
   workflow_dispatch:
 
 permissions:
