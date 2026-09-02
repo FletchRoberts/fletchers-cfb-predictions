@@ -247,6 +247,34 @@ def manage_weekly_snapshots(games_current_raw, predictions):
         print(f"  Week {first_pending_week} has a preliminary preview; waiting for "
               f"Wednesday to finalize it.")
 
+    # Manual override to recompute ATS/O-U correctness for already-graded
+    # games too, using whatever the CURRENT grading logic is -- for applying
+    # a bug fix (like the spread sign-convention fix) without needing to
+    # delete real prediction/Vegas data just to force a recalculation.
+    force_regrade = os.environ.get("FORCE_REGRADE", "").lower() == "true"
+    if force_regrade:
+        print("  FORCE_REGRADE is set -- will recompute ATS/O-U correctness "
+              "for every already-graded game too, not just newly-completed ones.")
+
+    def compute_correctness(g, actual_margin, actual_total):
+        """Recomputes ats_correct/ou_correct in place from a game's already-
+        stored predicted/vegas values and the given actual result. Shared by
+        both the normal newly-graded path and the force-regrade path, so a
+        future logic fix only needs to change this one place."""
+        if g.get("vegas_spread") is not None:
+            # Compare OUR prediction against VEGAS'S line, not against zero --
+            # we're picking whichever side we think will outperform the line,
+            # same logic already correctly used for O/U below. Comparing to
+            # zero only asked "do we predict home wins outright," which is a
+            # different (and wrong) question from "do we think home covers."
+            we_pick_home = g["predicted_spread"] > g["vegas_spread"]
+            g["ats_correct"] = (actual_margin > g["vegas_spread"]) if we_pick_home \
+                else (actual_margin < g["vegas_spread"])
+        if g.get("vegas_total") is not None:
+            we_pick_over = g["predicted_total"] > g["vegas_total"]
+            g["ou_correct"] = (actual_total > g["vegas_total"]) if we_pick_over \
+                else (actual_total < g["vegas_total"])
+
     # ---- 2. Grade any snapshots whose games have since completed ----
     completed_by_id = {g["id"]: g for g in all_fbs_games if g.get("completed")}
     for path in sorted(glob.glob(f"{HISTORY_DIR}/week_*.json")):
@@ -255,6 +283,11 @@ def manage_weekly_snapshots(games_current_raw, predictions):
         changed = False
         for g in snap["games"]:
             if g["graded"]:
+                if force_regrade:
+                    actual_margin = g["actual_home_score"] - g["actual_away_score"]
+                    actual_total = g["actual_home_score"] + g["actual_away_score"]
+                    compute_correctness(g, actual_margin, actual_total)
+                    changed = True
                 continue
             actual = completed_by_id.get(g["game_id"])
             if actual:
@@ -263,25 +296,12 @@ def manage_weekly_snapshots(games_current_raw, predictions):
                 g["graded"] = True
                 actual_margin = actual["homePoints"] - actual["awayPoints"]
                 actual_total = actual["homePoints"] + actual["awayPoints"]
-
-                if g.get("vegas_spread") is not None:
-                    # Compare OUR prediction against VEGAS'S line, not against zero --
-                    # we're picking whichever side we think will outperform the line,
-                    # same logic already correctly used for O/U below. Comparing to
-                    # zero only asked "do we predict home wins outright," which is a
-                    # different (and wrong) question from "do we think home covers."
-                    we_pick_home = g["predicted_spread"] > g["vegas_spread"]
-                    g["ats_correct"] = (actual_margin > g["vegas_spread"]) if we_pick_home \
-                        else (actual_margin < g["vegas_spread"])
-                if g.get("vegas_total") is not None:
-                    we_pick_over = g["predicted_total"] > g["vegas_total"]
-                    g["ou_correct"] = (actual_total > g["vegas_total"]) if we_pick_over \
-                        else (actual_total < g["vegas_total"])
+                compute_correctness(g, actual_margin, actual_total)
                 changed = True
         if changed:
             with open(path, "w") as f:
                 json.dump(snap, f, indent=2)
-            print(f"  Graded newly-completed games in {path}.")
+            print(f"  Graded/regraded games in {path}.")
 
     # ---- 3. Manifest of available weeks (for the site's dropdown) ----
     available_weeks = sorted(int(re.search(r"week_(\d+)\.json", p).group(1))
