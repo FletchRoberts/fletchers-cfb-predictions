@@ -20,6 +20,8 @@ import requests
 import numpy as np
 import pandas as pd
 import joblib
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -86,10 +88,13 @@ def compute_srs(game_list):
 
 
 def manage_weekly_snapshots(games_current_raw, predictions):
-    """Snapshots the next fully-upcoming week's predictions (once, immutably),
-    grades any existing snapshots whose games have since completed, and
-    recomputes the season-wide accuracy summary. Never overwrites a prediction
-    once saved -- only ever fills in actual results after the fact."""
+    """Snapshots the next fully-upcoming week's predictions on Wednesday
+    (Eastern time) only -- late enough that ratings are mature for that
+    week, before any of that week's games have kicked off. Grades any
+    existing snapshots whose games have since completed (including ATS/O-U
+    results against the Vegas line captured at snapshot time), and
+    recomputes the season-wide accuracy summary. Never overwrites a
+    prediction once saved -- only ever fills in actual results after the fact."""
     all_fbs_games = [g for g in games_current_raw if (
         g.get("seasonType") == "regular" and g.get("week") is not None
         and g.get("homeClassification") == "fbs" and g.get("awayClassification") == "fbs")]
@@ -100,13 +105,53 @@ def manage_weekly_snapshots(games_current_raw, predictions):
         if m:
             existing_snapshot_weeks.add(int(m.group(1)))
 
-    # ---- 1. Snapshot the next fully-upcoming week, if there is one and it's not done yet ----
+    # ---- 1. Snapshot the next fully-upcoming week, but ONLY on Wednesday (Eastern) ----
+    # Wednesday specifically: late enough in the week that ratings reflect the
+    # prior weekend's results, early enough that it's before Thursday/Friday/
+    # Saturday games that week. Using Eastern time (not UTC) since that's the
+    # broadcast-standard reference for CFB scheduling, and this correctly
+    # handles the EST/EDT switch via zoneinfo rather than a fixed UTC offset.
+    now_eastern = datetime.now(ZoneInfo("America/New_York"))
+    is_wednesday = now_eastern.weekday() == 2  # Monday=0 ... Wednesday=2
+
     weeks_present = sorted(set(g["week"] for g in all_fbs_games))
     for w in weeks_present:
         week_games = [g for g in all_fbs_games if g["week"] == w]
         any_completed = any(g.get("completed") for g in week_games)
         if any_completed or w in existing_snapshot_weeks:
             continue  # either already happened (can't honestly snapshot in hindsight) or already saved
+        if not is_wednesday:
+            print(f"  Week {w} is upcoming and not yet snapshotted, but today "
+                  f"({now_eastern.strftime('%A')}) isn't Wednesday -- waiting.")
+            break
+
+        # Pull Vegas lines for this week, to store alongside each game for later
+        # ATS/O-U grading. Built defensively -- field names not previously
+        # empirically confirmed in this codebase.
+        vegas_by_game = {}
+        try:
+            lines_resp = fetch("/lines", {"year": CURRENT_SEASON, "week": w, "seasonType": "regular"})
+            for g in lines_resp:
+                spreads, totals = [], []
+                for line in g.get("lines", []):
+                    if line.get("spread") is not None:
+                        try:
+                            spreads.append(float(line["spread"]))
+                        except (TypeError, ValueError):
+                            pass
+                    if line.get("overUnder") is not None:
+                        try:
+                            totals.append(float(line["overUnder"]))
+                        except (TypeError, ValueError):
+                            pass
+                vegas_by_game[g["id"]] = {
+                    "vegas_spread": (sum(spreads) / len(spreads)) if spreads else None,
+                    "vegas_total": (sum(totals) / len(totals)) if totals else None,
+                }
+            found = sum(1 for v in vegas_by_game.values() if v["vegas_spread"] is not None)
+            print(f"  Vegas lines: {found}/{len(vegas_by_game)} games have a spread available.")
+        except requests.exceptions.RequestException as e:
+            print(f"  WARNING: Vegas lines fetch failed ({e}) -- ATS/O-U grading will be unavailable this week.")
 
         snapshot_games = []
         for g in week_games:
@@ -114,6 +159,7 @@ def manage_weekly_snapshots(games_current_raw, predictions):
             pred = predictions.get(f"{home}|{away}")
             if not pred:
                 continue
+            vegas = vegas_by_game.get(g["id"], {})
             snapshot_games.append({
                 "game_id": g["id"], "home": home, "away": away,
                 "start_date": g.get("startDate"),
@@ -122,8 +168,10 @@ def manage_weekly_snapshots(games_current_raw, predictions):
                 "predicted_spread": pred["predicted_spread"],
                 "predicted_total": pred["predicted_total"],
                 "favorite": pred["favorite"],
+                "vegas_spread": vegas.get("vegas_spread"),
+                "vegas_total": vegas.get("vegas_total"),
                 "actual_home_score": None, "actual_away_score": None,
-                "graded": False
+                "graded": False, "ats_correct": None, "ou_correct": None
             })
         with open(f"{HISTORY_DIR}/week_{w}.json", "w") as f:
             json.dump({
@@ -131,8 +179,8 @@ def manage_weekly_snapshots(games_current_raw, predictions):
                 "snapshotted_at": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
                 "games": snapshot_games
             }, f, indent=2)
-        print(f"  Snapshotted {len(snapshot_games)} games for week {w}.")
-        break  # only the nearest upcoming week -- keeps snapshots close to kickoff, not stale
+        print(f"  Snapshotted {len(snapshot_games)} games for week {w} (Wednesday Eastern).")
+        break  # only the nearest upcoming week
 
     # ---- 2. Grade any snapshots whose games have since completed ----
     completed_by_id = {g["id"]: g for g in all_fbs_games if g.get("completed")}
@@ -148,6 +196,17 @@ def manage_weekly_snapshots(games_current_raw, predictions):
                 g["actual_home_score"] = actual["homePoints"]
                 g["actual_away_score"] = actual["awayPoints"]
                 g["graded"] = True
+                actual_margin = actual["homePoints"] - actual["awayPoints"]
+                actual_total = actual["homePoints"] + actual["awayPoints"]
+
+                if g.get("vegas_spread") is not None:
+                    we_pick_home = g["predicted_spread"] > 0
+                    g["ats_correct"] = (actual_margin > g["vegas_spread"]) if we_pick_home \
+                        else (actual_margin < g["vegas_spread"])
+                if g.get("vegas_total") is not None:
+                    we_pick_over = g["predicted_total"] > g["vegas_total"]
+                    g["ou_correct"] = (actual_total > g["vegas_total"]) if we_pick_over \
+                        else (actual_total < g["vegas_total"])
                 changed = True
         if changed:
             with open(path, "w") as f:
@@ -163,6 +222,8 @@ def manage_weekly_snapshots(games_current_raw, predictions):
     # ---- 4. Season-wide accuracy summary across every graded game so far ----
     total_games, correct_winner = 0, 0
     margin_err_sum, total_err_sum = 0.0, 0.0
+    ats_graded, ats_correct_count = 0, 0
+    ou_graded, ou_correct_count = 0, 0
     for path in glob.glob(f"{HISTORY_DIR}/week_*.json"):
         with open(path) as f:
             snap = json.load(f)
@@ -176,12 +237,22 @@ def manage_weekly_snapshots(games_current_raw, predictions):
                 correct_winner += 1
             margin_err_sum += abs(g["predicted_spread"] - actual_margin)
             total_err_sum += abs(g["predicted_total"] - actual_total)
+            if g.get("ats_correct") is not None:
+                ats_graded += 1
+                ats_correct_count += 1 if g["ats_correct"] else 0
+            if g.get("ou_correct") is not None:
+                ou_graded += 1
+                ou_correct_count += 1 if g["ou_correct"] else 0
 
     summary = {
         "games_graded": total_games,
         "win_accuracy_pct": round(100 * correct_winner / total_games, 1) if total_games else None,
         "avg_margin_error": round(margin_err_sum / total_games, 2) if total_games else None,
         "avg_total_error": round(total_err_sum / total_games, 2) if total_games else None,
+        "ats_games_graded": ats_graded,
+        "ats_win_pct": round(100 * ats_correct_count / ats_graded, 1) if ats_graded else None,
+        "ou_games_graded": ou_graded,
+        "ou_win_pct": round(100 * ou_correct_count / ou_graded, 1) if ou_graded else None,
         "updated_at": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime())
     }
     with open(f"{HISTORY_DIR}/summary.json", "w") as f:
