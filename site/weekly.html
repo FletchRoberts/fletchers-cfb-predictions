@@ -47,6 +47,10 @@
       home + " &ndash; " + away + "</div>";
   }
 
+  function statLine(label, value) {
+    return "<div class='score-line'><span class='score-line-label'>" + label + "</span> " + value + "</div>";
+  }
+
   function renderWeekSummary(games) {
     const graded = games.filter(function (g) { return g.graded; });
     const el = document.getElementById("weekSummaryStrip");
@@ -98,6 +102,15 @@
       snap.games.forEach(function (g) {
         let scoreCell = scoreLine("Pred", g.predicted_home_score.toFixed(1), g.predicted_away_score.toFixed(1));
         let winBadge = "<span class='result-badge pending'>&mdash;</span>";
+
+        const hasVegasSpread = g.vegas_spread !== null && g.vegas_spread !== undefined;
+        const hasVegasTotal = g.vegas_total !== null && g.vegas_total !== undefined;
+
+        let atsCell = statLine("Pred", fmtSigned(g.predicted_spread)) +
+          statLine("Vegas", hasVegasSpread ? fmtSigned(g.vegas_spread) : "N/A");
+        let ouCell = statLine("Pred", g.predicted_total.toFixed(1)) +
+          statLine("Vegas", hasVegasTotal ? g.vegas_total.toFixed(1) : "N/A");
+
         let atsBadge = "<span class='result-badge pending'>&mdash;</span>";
         let ouBadge = "<span class='result-badge pending'>&mdash;</span>";
 
@@ -109,8 +122,11 @@
           ouBadge = resultBadge(g.ou_correct);
         }
 
+        atsCell += "<div class='badge-row'>" + atsBadge + "</div>";
+        ouCell += "<div class='badge-row'>" + ouBadge + "</div>";
+
         html += "<tr><td class='team-cell'>" + g.home + "<br><span class='vs-text'>vs " + g.away + "</span></td>" +
-          "<td>" + scoreCell + "</td><td>" + winBadge + "</td><td>" + atsBadge + "</td><td>" + ouBadge + "</td></tr>";
+          "<td>" + scoreCell + "</td><td>" + winBadge + "</td><td>" + atsCell + "</td><td>" + ouCell + "</td></tr>";
       });
       html += "</tbody></table>";
       container.innerHTML = html;
