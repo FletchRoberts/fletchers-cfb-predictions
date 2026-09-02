@@ -11,6 +11,12 @@ on:
   schedule:
     - cron: "0 8 * * *"
   workflow_dispatch:
+    inputs:
+      force_snapshot:
+        description: "Bypass the Sunday/Wednesday gate for this run only (treats today as Wednesday -- creates and finalizes immediately). Leave unchecked for normal runs."
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write  # required so this workflow can push its commit back to the repo
@@ -35,6 +41,7 @@ jobs:
       - name: Run update script
         env:
           CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+          FORCE_SNAPSHOT: ${{ github.event.inputs.force_snapshot }}
         run: python update_current.py
 
       - name: Commit updated data back to the repo
