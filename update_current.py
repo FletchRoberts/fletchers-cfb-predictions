@@ -88,13 +88,18 @@ def compute_srs(game_list):
 
 
 def manage_weekly_snapshots(games_current_raw, predictions):
-    """Snapshots the next fully-upcoming week's predictions on Wednesday
-    (Eastern time) only -- late enough that ratings are mature for that
-    week, before any of that week's games have kicked off. Grades any
-    existing snapshots whose games have since completed (including ATS/O-U
-    results against the Vegas line captured at snapshot time), and
-    recomputes the season-wide accuracy summary. Never overwrites a
-    prediction once saved -- only ever fills in actual results after the fact."""
+    """Two-phase snapshotting for every not-yet-completed week:
+    Phase A creates a PRELIMINARY preview for every week that doesn't have
+    one yet, on any day -- this is what lets you see predictions for weeks
+    further out, not just the immediate next one.
+    Phase B finalizes ONLY the single earliest pending week, and ONLY on
+    Wednesday (Eastern time, or when FORCE_SNAPSHOT bypasses the gate) --
+    overwriting its preview with fresh ratings and fresh Vegas lines right
+    before that week's games kick off. Once finalized, a week is
+    permanently locked -- Phase A and B both skip it from then on.
+    Also grades any existing snapshots whose games have since completed
+    (including ATS/O-U results against the Vegas line captured at snapshot
+    time), and recomputes the season-wide accuracy summary."""
     all_fbs_games = [g for g in games_current_raw if (
         g.get("seasonType") == "regular" and g.get("week") is not None
         and g.get("homeClassification") == "fbs" and g.get("awayClassification") == "fbs")]
@@ -107,7 +112,6 @@ def manage_weekly_snapshots(games_current_raw, predictions):
     # on Sunday succeeding. Once finalized, permanently locked; only grading
     # touches it after that point.
     now_eastern = datetime.now(ZoneInfo("America/New_York"))
-    is_sunday = now_eastern.weekday() == 6    # Monday=0 ... Sunday=6
     is_wednesday = now_eastern.weekday() == 2  # Monday=0 ... Wednesday=2
 
     # Manual override for testing/forcing a snapshot outside the normal
@@ -121,42 +125,9 @@ def manage_weekly_snapshots(games_current_raw, predictions):
               "for this run (treating today as Wednesday).")
         is_wednesday = True
 
-    weeks_present = sorted(set(g["week"] for g in all_fbs_games))
-    for w in weeks_present:
-        week_games = [g for g in all_fbs_games if g["week"] == w]
-        any_completed = any(g.get("completed") for g in week_games)
-        if any_completed:
-            continue  # already happened -- can't honestly snapshot in hindsight
-
-        snapshot_path = f"{HISTORY_DIR}/week_{w}.json"
-        existing_snapshot = None
-        if os.path.exists(snapshot_path):
-            with open(snapshot_path) as f:
-                existing_snapshot = json.load(f)
-
-        if existing_snapshot and existing_snapshot.get("finalized"):
-            continue  # locked, permanently done for this week
-
-        if existing_snapshot is None:
-            if not (is_sunday or is_wednesday):
-                print(f"  Week {w} has no snapshot yet, but today "
-                      f"({now_eastern.strftime('%A')}) is neither Sunday nor "
-                      f"Wednesday -- waiting.")
-                break
-            will_finalize = is_wednesday
-        else:
-            if not is_wednesday:
-                print(f"  Week {w} has a preliminary snapshot; waiting for "
-                      f"Wednesday to finalize it.")
-                break
-            will_finalize = True
-
-        print(f"  {'Finalizing' if will_finalize else 'Creating preliminary snapshot for'} "
-              f"week {w}...")
-
-        # Pull Vegas lines for this week, to store alongside each game for later
-        # ATS/O-U grading. Built defensively -- field names not previously
-        # empirically confirmed in this codebase.
+    def build_snapshot_games(w, week_games):
+        """Fetches Vegas lines and builds the games list for one week's snapshot.
+        Shared by both the preview-creation and finalization phases below."""
         vegas_by_game = {}
         try:
             lines_resp = fetch("/lines", {"year": CURRENT_SEASON, "week": w, "seasonType": "regular"})
@@ -178,9 +149,9 @@ def manage_weekly_snapshots(games_current_raw, predictions):
                     "vegas_total": (sum(totals) / len(totals)) if totals else None,
                 }
             found = sum(1 for v in vegas_by_game.values() if v["vegas_spread"] is not None)
-            print(f"  Vegas lines: {found}/{len(vegas_by_game)} games have a spread available.")
+            print(f"    Vegas lines: {found}/{len(vegas_by_game)} games have a spread available.")
         except requests.exceptions.RequestException as e:
-            print(f"  WARNING: Vegas lines fetch failed ({e}) -- ATS/O-U grading will be unavailable this week.")
+            print(f"    WARNING: Vegas lines fetch failed ({e}) -- ATS/O-U grading will be unavailable this week.")
 
         snapshot_games = []
         for g in week_games:
@@ -202,16 +173,73 @@ def manage_weekly_snapshots(games_current_raw, predictions):
                 "actual_home_score": None, "actual_away_score": None,
                 "graded": False, "ats_correct": None, "ou_correct": None
             })
-        with open(snapshot_path, "w") as f:
+        return snapshot_games
+
+    def write_snapshot(w, snapshot_games, finalized):
+        with open(f"{HISTORY_DIR}/week_{w}.json", "w") as f:
             json.dump({
                 "week": w, "season": CURRENT_SEASON,
                 "snapshotted_at": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
-                "finalized": will_finalize,
+                "finalized": finalized,
                 "games": snapshot_games
             }, f, indent=2)
-        print(f"  {'Finalized' if will_finalize else 'Preliminary snapshot saved for'} "
-              f"week {w} ({len(snapshot_games)} games).")
-        break  # only the nearest eligible week per run
+
+    weeks_present = sorted(set(g["week"] for g in all_fbs_games))
+
+    # ---- Phase A: create a PRELIMINARY preview for every week that doesn't
+    # have any snapshot yet, on ANY day -- this is what lets you see
+    # predictions for weeks further out, not just the immediate next one.
+    # Skipped entirely for a week whose snapshot already exists (preliminary
+    # or finalized) -- this phase only ever fills in genuinely missing weeks.
+    first_pending_week = None  # earliest not-completed, not-yet-finalized week -- used by Phase B below
+    for w in weeks_present:
+        week_games = [g for g in all_fbs_games if g["week"] == w]
+        completed_count = sum(1 for g in week_games if g.get("completed"))
+        # A week is only considered "already happened" once MOST of its games
+        # are done -- not just because a single game is completed. CFBD files
+        # early "week 0" trickle games under the same week number as the main
+        # slate, so a naive "any game completed" check would permanently and
+        # incorrectly exclude an entire real week (dozens of upcoming games)
+        # just because 1-2 unrelated early games happened to share its number.
+        mostly_completed = week_games and (completed_count / len(week_games)) > 0.5
+        if mostly_completed:
+            continue  # this week has genuinely concluded -- can't honestly snapshot in hindsight
+
+        snapshot_path = f"{HISTORY_DIR}/week_{w}.json"
+        existing_snapshot = None
+        if os.path.exists(snapshot_path):
+            with open(snapshot_path) as f:
+                existing_snapshot = json.load(f)
+
+        if existing_snapshot and existing_snapshot.get("finalized"):
+            continue  # locked, permanently done for this week
+
+        if first_pending_week is None:
+            first_pending_week = w  # remember for Phase B, regardless of whether Phase A acts on it
+
+        if existing_snapshot is not None:
+            continue  # already has a preview -- Phase B handles finalizing (only the earliest one)
+
+        print(f"  Creating preliminary preview for week {w} (no snapshot existed yet)...")
+        snapshot_games = build_snapshot_games(w, week_games)
+        write_snapshot(w, snapshot_games, finalized=False)
+        print(f"  Preliminary preview saved for week {w} ({len(snapshot_games)} games).")
+
+    # ---- Phase B: finalize ONLY the earliest pending week, and ONLY on
+    # Wednesday (or when FORCE_SNAPSHOT bypasses the gate) -- this preserves
+    # the "freshest data right before kickoff" property for the week that's
+    # actually about to happen, even though Phase A may have already given
+    # it (and later weeks) a preliminary preview.
+    if first_pending_week is not None and is_wednesday:
+        w = first_pending_week
+        week_games = [g for g in all_fbs_games if g["week"] == w]
+        print(f"  Finalizing week {w} (today is Wednesday)...")
+        snapshot_games = build_snapshot_games(w, week_games)
+        write_snapshot(w, snapshot_games, finalized=True)
+        print(f"  Finalized week {w} ({len(snapshot_games)} games).")
+    elif first_pending_week is not None:
+        print(f"  Week {first_pending_week} has a preliminary preview; waiting for "
+              f"Wednesday to finalize it.")
 
     # ---- 2. Grade any snapshots whose games have since completed ----
     completed_by_id = {g["id"]: g for g in all_fbs_games if g.get("completed")}
