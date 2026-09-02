@@ -548,6 +548,42 @@ def main():
                     p = ppa_agg.setdefault(t, {"off": [], "def": []})
                     p["off"].append(gp[t]["off"]); p["def"].append(gp[t]["def"])
 
+    # -----------------------------------------------------------------
+    # Schedule-strength correction for Gen 3's prior-season cold-start.
+    #
+    # PROBLEM: prior_team_profiles' own_ppg/opp_ppg_allowed are RAW, un-
+    # adjusted box-score averages (e.g. Toledo: 29.0 PPG scored, 13.3
+    # allowed in 2025) -- real numbers, but earned against whatever
+    # competition that team actually played, with zero correction for
+    # opponent strength. A MAC team can rack up gaudy raw stats against
+    # weaker conference competition without that reflecting true quality,
+    # and nothing in this pipeline was catching that (this is what caused
+    # Toledo to rank ~14th overall despite being an unremarkable team).
+    #
+    # FIX: substitute SP+'s own opponent-adjusted offense/defense rating
+    # (confirmed live and populated: e.g. offense.rating, defense.rating,
+    # already in points-per-game-like units) in place of the raw PPG
+    # numbers, for whichever teams SP+ covers. Falls back to the raw value
+    # for any team SP+ doesn't have. Only own_ppg/opp_ppg_allowed are
+    # corrected this way -- off_ppa/def_ppa are left as-is for now, a
+    # possible future refinement, not addressed by this fix.
+    print(f"Fetching SP+ for {PRIOR_SEASON} (schedule-adjusted correction for Gen 3 cold-start)...")
+    prior_sp_offense, prior_sp_defense = {}, {}
+    try:
+        prior_sp_resp = fetch("/ratings/sp", {"year": PRIOR_SEASON})
+        for rec in prior_sp_resp:
+            team = rec.get("team")
+            off_rating = rec.get("offense", {}).get("rating")
+            def_rating = rec.get("defense", {}).get("rating")
+            if team and off_rating is not None:
+                prior_sp_offense[team] = off_rating
+            if team and def_rating is not None:
+                prior_sp_defense[team] = def_rating
+        print(f"  SP+ {PRIOR_SEASON} offense/defense: {len(prior_sp_offense)} teams found.")
+    except requests.exceptions.RequestException as e:
+        print(f"  WARNING: SP+ {PRIOR_SEASON} fetch failed ({e}) -- "
+              f"Gen 3 cold-start will use raw, un-adjusted stats this run.")
+
     # League-average fallback ONLY for teams with neither current-season games NOR
     # prior-season data at all (e.g. a team brand new to FBS this year) -- everyone
     # else gets a real, differentiated blend instead of a generic flat number.
@@ -571,7 +607,13 @@ def main():
         prior = prior_team_profiles.get(t, {
             "own_ppg": league_avg_prior_ppg, "opp_ppg_allowed": league_avg_prior_opp_ppg,
             "off_ppa": league_avg_prior_off_ppa, "def_ppa": league_avg_prior_def_ppa,
-        })
+        }).copy()
+        # Substitute schedule-adjusted SP+ values where available, in place of
+        # the raw box-score prior computed above.
+        if t in prior_sp_offense:
+            prior["own_ppg"] = prior_sp_offense[t]
+        if t in prior_sp_defense:
+            prior["opp_ppg_allowed"] = prior_sp_defense[t]
 
         # Same games-played trust ramp used throughout this project for margin/total blending
         w = min(games_played_this_season / GAMES_TO_FULL_TRUST_MARGIN, 1)
