@@ -96,7 +96,11 @@
       }
       renderWeekSummary(snap.games);
 
-      let html = "<table><thead><tr>" +
+      const statusBadge = snap.finalized === false
+        ? "<div class='status-note'>Preliminary &mdash; captured early in the week, will be finalized Wednesday with updated ratings and Vegas lines.</div>"
+        : "";
+
+      let html = statusBadge + "<table><thead><tr>" +
         "<th>Matchup</th><th>Score</th><th>Win</th><th>ATS</th><th>O/U</th>" +
         "</tr></thead><tbody>";
       snap.games.forEach(function (g) {

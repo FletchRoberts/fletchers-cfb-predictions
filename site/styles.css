@@ -278,6 +278,15 @@ td.num { font-family: 'Space Mono', monospace; }
   text-transform: uppercase;
 }
 .badge-row { margin-top: 6px; }
+.status-note {
+  background: var(--amber-soft);
+  border: 1px solid var(--amber);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--amber-bright);
+}
 
 /* ---------- Badges ---------- */
 .result-badge {
