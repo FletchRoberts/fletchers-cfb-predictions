@@ -496,6 +496,33 @@ def main():
             return 0.0  # degenerate case: every source failed this run
         return sum(usable) / len(usable)
 
+    # TEMPORARY DIAGNOSTIC: print each source's raw and z-scored contribution
+    # for a watch list of teams, to trace an unexpected ranking result (LSU
+    # dropping to ~43, Toledo appearing in the top 20) back to its actual
+    # cause -- a team-name mismatch in one source, a bad field-name guess,
+    # or a genuine reaction to real results. Remove once resolved.
+    watch_list = ["LSU", "Toledo", "Ohio State", "Georgia"]
+    print("\n  --- Diagnostic: per-source values for watch-list teams ---")
+    for team in watch_list:
+        if team not in all_teams:
+            print(f"  {team}: NOT FOUND in all_teams list at all (name mismatch vs /teams/fbs?)")
+            continue
+        in_poll_ap = team in ap_points
+        in_poll_coaches = team in coaches_points
+        in_sp = team in sp_raw
+        in_fpi = team in fpi_raw
+        in_srs = team in cfbd_srs_raw
+        print(f"  {team}:")
+        print(f"    Present in -- AP:{in_poll_ap} Coaches:{in_poll_coaches} SP+:{in_sp} FPI:{in_fpi} CFBD-SRS:{in_srs}")
+        print(f"    Raw values -- SP+:{sp_raw.get(team)} FPI:{fpi_raw.get(team)} CFBD-SRS:{cfbd_srs_raw.get(team)}")
+        poll_val = poll_prior(team) if (ap_points or coaches_points) else None
+        poll_str = f"{poll_val:.2f}" if poll_val is not None else "None"
+        print(f"    Z-scored priors -- poll:{poll_str} "
+              f"sp:{generic_prior(team, sp_raw)} fpi:{generic_prior(team, fpi_raw)} "
+              f"srs:{generic_prior(team, cfbd_srs_raw)}")
+        print(f"    Final cold_start_prior: {cold_start_prior(team):.2f}")
+    print("  --- End diagnostic ---\n")
+
     gen1_current = {}
     for team in all_teams:
         gp = len(team_games.get(team, []))
@@ -708,6 +735,28 @@ def main():
     rank_off_preds = off_model.predict(rank_off_batch)
     rank_def_preds = def_model.predict(rank_def_batch)
     gen3_vs_avg = rank_off_preds - rank_def_preds
+
+    # TEMPORARY DIAGNOSTIC (Gen 3 half): trace the same watch-list teams'
+    # actual profile inputs and off/def model outputs, since the gen1
+    # diagnostic alone showed gen1 was NOT the source of Toledo's anomalous
+    # ranking -- gen3 is the more likely place given gen1 looked unremarkable
+    # for Toledo specifically. Remove once resolved.
+    print("\n  --- Diagnostic: Gen 3 inputs/outputs for watch-list teams ---")
+    for team in watch_list:
+        if team not in all_teams:
+            continue
+        idx = all_teams.index(team)
+        p = team_profiles[team]
+        in_prior_profiles = team in prior_team_profiles
+        print(f"  {team}:")
+        print(f"    In prior_team_profiles (2025 fallback source): {in_prior_profiles}")
+        print(f"    team_profiles (used this run) -- own_ppg:{p['own_ppg']:.1f} "
+              f"opp_ppg_allowed:{p['opp_ppg_allowed']:.1f} off_ppa:{p['off_ppa']:.3f} "
+              f"def_ppa:{p['def_ppa']:.3f} games_played:{p['games_played']}")
+        print(f"    off_model pred (vs league avg opp): {rank_off_preds[idx]:.2f} "
+              f"def_model pred (vs league avg opp): {rank_def_preds[idx]:.2f} "
+              f"gen3_vs_avg: {gen3_vs_avg[idx]:.2f}")
+    print("  --- End Gen 3 diagnostic ---\n")
 
     gen1_mean = float(np.mean(list(gen1_current.values())))
     rankings = []
