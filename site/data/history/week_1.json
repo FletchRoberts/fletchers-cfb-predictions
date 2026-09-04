@@ -160,11 +160,11 @@
       "favorite": "Rutgers",
       "vegas_spread": 28.75,
       "vegas_total": 51.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 21,
+      "actual_away_score": 37,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": true
     },
     {
       "game_id": 401858204,
@@ -178,11 +178,11 @@
       "favorite": "Wake Forest",
       "vegas_spread": 23.75,
       "vegas_total": 48.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 38,
+      "actual_away_score": 16,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": true
     },
     {
       "game_id": 401856776,
@@ -196,11 +196,11 @@
       "favorite": "Georgia Tech",
       "vegas_spread": 6.5,
       "vegas_total": 50.75,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 13,
+      "actual_away_score": 14,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": false
     },
     {
       "game_id": 401858424,
@@ -214,11 +214,11 @@
       "favorite": "Illinois",
       "vegas_spread": 27.75,
       "vegas_total": 54.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 42,
+      "actual_away_score": 23,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": true
     },
     {
       "game_id": 401864495,
