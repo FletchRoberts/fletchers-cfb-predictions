@@ -232,11 +232,11 @@
       "favorite": "Eastern Michigan",
       "vegas_spread": 3.0,
       "vegas_total": 56.25,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 21,
+      "actual_away_score": 27,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": true
     },
     {
       "game_id": 401856664,
@@ -250,11 +250,11 @@
       "favorite": "Oklahoma",
       "vegas_spread": 41.5,
       "vegas_total": 51.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 51,
+      "actual_away_score": 0,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": true
     },
     {
       "game_id": 401858429,
@@ -268,11 +268,11 @@
       "favorite": "Toledo",
       "vegas_spread": 9.5,
       "vegas_total": 47.0,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 30,
+      "actual_away_score": 20,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401858436,
@@ -286,11 +286,11 @@
       "favorite": "USC",
       "vegas_spread": 22.0,
       "vegas_total": 51.75,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 39,
+      "actual_away_score": 0,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401858206,
@@ -304,11 +304,11 @@
       "favorite": "Miami",
       "vegas_spread": -24.5,
       "vegas_total": 48.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 6,
+      "actual_away_score": 45,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": true
     },
     {
       "game_id": 401856778,
