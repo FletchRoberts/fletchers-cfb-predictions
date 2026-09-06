@@ -322,11 +322,11 @@
       "favorite": "Houston",
       "vegas_spread": 20.5,
       "vegas_total": 49.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 33,
+      "actual_away_score": 20,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": false
     },
     {
       "game_id": 401858425,
@@ -340,11 +340,11 @@
       "favorite": "Indiana",
       "vegas_spread": 39.75,
       "vegas_total": 55.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 52,
+      "actual_away_score": 16,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": true
     },
     {
       "game_id": 401856780,
@@ -358,11 +358,11 @@
       "favorite": "West Virginia",
       "vegas_spread": 21.25,
       "vegas_total": 55.75,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 31,
+      "actual_away_score": 24,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": true
     },
     {
       "game_id": 401858430,
@@ -376,11 +376,11 @@
       "favorite": "Nebraska",
       "vegas_spread": 23.75,
       "vegas_total": 45.75,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 49,
+      "actual_away_score": 21,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": true
     },
     {
       "game_id": 401869960,
@@ -394,11 +394,11 @@
       "favorite": "James Madison",
       "vegas_spread": 6.5,
       "vegas_total": 50.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 20,
+      "actual_away_score": 13,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": false
     },
     {
       "game_id": 401856634,
@@ -412,11 +412,11 @@
       "favorite": "Alabama",
       "vegas_spread": 27.75,
       "vegas_total": 52.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 48,
+      "actual_away_score": 10,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401858207,
@@ -430,11 +430,11 @@
       "favorite": "Pittsburgh",
       "vegas_spread": 16.75,
       "vegas_total": 48.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 59,
+      "actual_away_score": 14,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": true
     },
     {
       "game_id": 401858432,
@@ -448,11 +448,11 @@
       "favorite": "Ohio State",
       "vegas_spread": 50.75,
       "vegas_total": 56.0,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 56,
+      "actual_away_score": 3,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401856665,
@@ -466,11 +466,11 @@
       "favorite": "South Carolina",
       "vegas_spread": 36.0,
       "vegas_total": 54.0,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 57,
+      "actual_away_score": 0,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401856777,
@@ -484,11 +484,11 @@
       "favorite": "Cincinnati",
       "vegas_spread": 7.25,
       "vegas_total": 49.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 34,
+      "actual_away_score": 15,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": false
     },
     {
       "game_id": 401858209,
@@ -502,11 +502,11 @@
       "favorite": "Duke",
       "vegas_spread": 7.5,
       "vegas_total": 51.25,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 17,
+      "actual_away_score": 3,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401856667,
@@ -520,11 +520,11 @@
       "favorite": "Texas",
       "vegas_spread": 29.5,
       "vegas_total": 59.75,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 59,
+      "actual_away_score": 7,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401856636,
@@ -538,11 +538,11 @@
       "favorite": "Auburn",
       "vegas_spread": 7.25,
       "vegas_total": 58.75,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 17,
+      "actual_away_score": 16,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": true
     },
     {
       "game_id": 401858433,
@@ -556,11 +556,11 @@
       "favorite": "Oregon",
       "vegas_spread": 24.25,
       "vegas_total": 51.25,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 34,
+      "actual_away_score": 27,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": true
     },
     {
       "game_id": 401858434,
@@ -574,11 +574,11 @@
       "favorite": "Penn State",
       "vegas_spread": 23.75,
       "vegas_total": 52.25,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 45,
+      "actual_away_score": 0,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401856772,
@@ -592,11 +592,11 @@
       "favorite": "Tulsa",
       "vegas_spread": -13.25,
       "vegas_total": 59.25,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 24,
+      "actual_away_score": 10,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": true
     },
     {
       "game_id": 401858426,
@@ -610,11 +610,11 @@
       "favorite": "Iowa",
       "vegas_spread": 31.25,
       "vegas_total": 44.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 40,
+      "actual_away_score": 0,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401860878,
@@ -628,11 +628,11 @@
       "favorite": "Colorado State",
       "vegas_spread": 3.0,
       "vegas_total": 46.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 35,
+      "actual_away_score": 13,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": true
     },
     {
       "game_id": 401856668,
@@ -646,11 +646,11 @@
       "favorite": "Texas A&M",
       "vegas_spread": 40.5,
       "vegas_total": 53.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 50,
+      "actual_away_score": 0,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401862699,
@@ -664,11 +664,11 @@
       "favorite": "South Florida",
       "vegas_spread": 14.0,
       "vegas_total": 52.0,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 19,
+      "actual_away_score": 9,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": false
     },
     {
       "game_id": 401862695,
@@ -682,11 +682,11 @@
       "favorite": "Memphis",
       "vegas_spread": 11.25,
       "vegas_total": 52.25,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 42,
+      "actual_away_score": 24,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": true
     },
     {
       "game_id": 401870763,
@@ -700,11 +700,11 @@
       "favorite": "Troy",
       "vegas_spread": 16.5,
       "vegas_total": 53.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 24,
+      "actual_away_score": 21,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": true
     },
     {
       "game_id": 401856662,
@@ -718,11 +718,11 @@
       "favorite": "Mississippi State",
       "vegas_spread": 28.5,
       "vegas_total": 54.75,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 62,
+      "actual_away_score": 13,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401856660,
@@ -736,11 +736,11 @@
       "favorite": "LSU",
       "vegas_spread": 10.0,
       "vegas_total": 50.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 51,
+      "actual_away_score": 10,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401858428,
@@ -754,11 +754,11 @@
       "favorite": "Michigan",
       "vegas_spread": 27.5,
       "vegas_total": 48.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 13,
+      "actual_away_score": 12,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": true
     },
     {
       "game_id": 401856637,
@@ -772,11 +772,11 @@
       "favorite": "Florida",
       "vegas_spread": 26.5,
       "vegas_total": 59.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 66,
+      "actual_away_score": 21,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401864497,
@@ -790,11 +790,11 @@
       "favorite": "Hawai'i",
       "vegas_spread": -3.0,
       "vegas_total": 56.25,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 6,
+      "actual_away_score": 21,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401864498,
@@ -808,11 +808,11 @@
       "favorite": "New Mexico",
       "vegas_spread": 10.0,
       "vegas_total": 46.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 38,
+      "actual_away_score": 7,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401864432,
@@ -826,11 +826,11 @@
       "favorite": "Western Kentucky",
       "vegas_spread": -2.5,
       "vegas_total": 52.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 49,
+      "actual_away_score": 14,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": false
     },
     {
       "game_id": 401858210,
@@ -844,11 +844,11 @@
       "favorite": "California",
       "vegas_spread": -1.75,
       "vegas_total": 53.75,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 24,
+      "actual_away_score": 45,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401858437,
