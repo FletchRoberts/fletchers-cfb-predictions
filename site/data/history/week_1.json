@@ -862,11 +862,11 @@
       "favorite": "Washington",
       "vegas_spread": 23.25,
       "vegas_total": 50.75,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 24,
+      "actual_away_score": 10,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": true
     },
     {
       "game_id": 401858438,
@@ -880,11 +880,11 @@
       "favorite": "Notre Dame",
       "vegas_spread": 20.5,
       "vegas_total": 47.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 41,
+      "actual_away_score": 13,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": true
     },
     {
       "game_id": 401856661,
@@ -898,11 +898,11 @@
       "favorite": "Ole Miss",
       "vegas_spread": 7.0,
       "vegas_total": 55.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 41,
+      "actual_away_score": 38,
+      "graded": true,
+      "ats_correct": true,
+      "ou_correct": false
     },
     {
       "game_id": 401858212,
