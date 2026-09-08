@@ -1,274 +1,274 @@
 [
   {
     "team": "Ohio State",
-    "composite_rating": 7.0,
-    "gen1": 10.89,
+    "composite_rating": 7.18,
+    "gen1": 11.38,
     "games_played": 1,
     "rank": 1
   },
   {
     "team": "Georgia",
-    "composite_rating": 6.28,
-    "gen1": 11.43,
+    "composite_rating": 6.47,
+    "gen1": 11.94,
     "games_played": 0,
     "rank": 2
   },
   {
     "team": "Miami",
-    "composite_rating": 6.21,
-    "gen1": 12.24,
+    "composite_rating": 6.35,
+    "gen1": 12.62,
     "games_played": 1,
     "rank": 3
   },
   {
     "team": "Oregon",
-    "composite_rating": 6.02,
-    "gen1": 10.26,
+    "composite_rating": 6.19,
+    "gen1": 10.72,
     "games_played": 1,
     "rank": 4
   },
   {
     "team": "Notre Dame",
-    "composite_rating": 5.69,
-    "gen1": 9.64,
+    "composite_rating": 5.85,
+    "gen1": 10.07,
     "games_played": 1,
     "rank": 5
   },
   {
     "team": "USC",
-    "composite_rating": 5.46,
-    "gen1": 8.06,
+    "composite_rating": 5.54,
+    "gen1": 8.3,
     "games_played": 2,
     "rank": 6
   },
   {
     "team": "Indiana",
-    "composite_rating": 5.34,
-    "gen1": 7.66,
+    "composite_rating": 5.46,
+    "gen1": 8.0,
     "games_played": 1,
     "rank": 7
   },
   {
     "team": "Texas",
-    "composite_rating": 5.21,
-    "gen1": 9.68,
+    "composite_rating": 5.38,
+    "gen1": 10.12,
     "games_played": 1,
     "rank": 8
   },
   {
     "team": "Texas Tech",
-    "composite_rating": 5.13,
-    "gen1": 7.05,
+    "composite_rating": 5.25,
+    "gen1": 7.37,
     "games_played": 0,
     "rank": 9
   },
   {
     "team": "Texas A&M",
-    "composite_rating": 4.85,
-    "gen1": 7.67,
+    "composite_rating": 4.98,
+    "gen1": 8.02,
     "games_played": 1,
     "rank": 10
   },
   {
     "team": "Alabama",
-    "composite_rating": 4.4,
-    "gen1": 7.3,
+    "composite_rating": 4.52,
+    "gen1": 7.63,
     "games_played": 1,
     "rank": 11
   },
   {
     "team": "Ole Miss",
-    "composite_rating": 4.2,
-    "gen1": 6.52,
+    "composite_rating": 4.31,
+    "gen1": 6.82,
     "games_played": 1,
     "rank": 12
   },
   {
     "team": "Oklahoma",
-    "composite_rating": 4.19,
-    "gen1": 6.62,
+    "composite_rating": 4.3,
+    "gen1": 6.92,
     "games_played": 1,
     "rank": 13
   },
   {
     "team": "Michigan",
-    "composite_rating": 3.64,
-    "gen1": 5.64,
+    "composite_rating": 3.74,
+    "gen1": 5.9,
     "games_played": 1,
     "rank": 14
   },
   {
     "team": "Penn State",
-    "composite_rating": 3.52,
-    "gen1": 3.94,
+    "composite_rating": 3.58,
+    "gen1": 4.11,
     "games_played": 1,
     "rank": 15
   },
   {
     "team": "Tennessee",
-    "composite_rating": 3.34,
-    "gen1": 5.49,
+    "composite_rating": 3.43,
+    "gen1": 5.74,
     "games_played": 0,
     "rank": 16
   },
   {
     "team": "LSU",
-    "composite_rating": 3.26,
-    "gen1": 7.18,
+    "composite_rating": 3.38,
+    "gen1": 7.5,
     "games_played": 1,
     "rank": 17
   },
   {
-    "team": "BYU",
-    "composite_rating": 3.22,
+    "team": "SMU",
+    "composite_rating": 3.32,
     "gen1": 4.57,
-    "games_played": 0,
+    "games_played": 1,
     "rank": 18
   },
   {
-    "team": "Washington",
-    "composite_rating": 3.13,
-    "gen1": 3.56,
-    "games_played": 1,
+    "team": "BYU",
+    "composite_rating": 3.29,
+    "gen1": 4.78,
+    "games_played": 0,
     "rank": 19
   },
   {
-    "team": "Utah",
-    "composite_rating": 3.06,
-    "gen1": 2.53,
-    "games_played": 0,
+    "team": "Washington",
+    "composite_rating": 3.2,
+    "gen1": 3.72,
+    "games_played": 1,
     "rank": 20
   },
   {
-    "team": "SMU",
-    "composite_rating": 2.86,
-    "gen1": 3.63,
+    "team": "Utah",
+    "composite_rating": 3.11,
+    "gen1": 2.64,
     "games_played": 0,
     "rank": 21
   },
   {
     "team": "Missouri",
-    "composite_rating": 2.8,
-    "gen1": 3.43,
+    "composite_rating": 2.85,
+    "gen1": 3.58,
     "games_played": 0,
     "rank": 22
   },
   {
     "team": "Vanderbilt",
-    "composite_rating": 2.56,
-    "gen1": 1.77,
+    "composite_rating": 2.59,
+    "gen1": 1.85,
     "games_played": 0,
     "rank": 23
   },
   {
     "team": "Florida",
-    "composite_rating": 2.31,
-    "gen1": 3.55,
+    "composite_rating": 2.37,
+    "gen1": 3.71,
     "games_played": 1,
     "rank": 24
   },
   {
     "team": "Iowa",
-    "composite_rating": 2.2,
-    "gen1": 2.68,
+    "composite_rating": 2.25,
+    "gen1": 2.8,
     "games_played": 1,
     "rank": 25
   },
   {
     "team": "South Carolina",
-    "composite_rating": 2.14,
-    "gen1": 2.99,
+    "composite_rating": 2.19,
+    "gen1": 3.12,
     "games_played": 1,
     "rank": 26
   },
   {
-    "team": "Florida State",
-    "composite_rating": 1.92,
-    "gen1": 1.94,
+    "team": "Nebraska",
+    "composite_rating": 1.95,
+    "gen1": 2.03,
     "games_played": 1,
     "rank": 27
   },
   {
-    "team": "Nebraska",
-    "composite_rating": 1.92,
-    "gen1": 1.94,
-    "games_played": 1,
+    "team": "Florida State",
+    "composite_rating": 1.94,
+    "gen1": 1.74,
+    "games_played": 2,
     "rank": 28
   },
   {
     "team": "Louisville",
-    "composite_rating": 1.83,
-    "gen1": 2.02,
+    "composite_rating": 1.86,
+    "gen1": 2.11,
     "games_played": 1,
     "rank": 29
   },
   {
     "team": "Arizona",
-    "composite_rating": 1.77,
-    "gen1": 1.33,
+    "composite_rating": 1.79,
+    "gen1": 1.39,
     "games_played": 0,
     "rank": 30
   },
   {
     "team": "Illinois",
-    "composite_rating": 1.72,
-    "gen1": 1.13,
+    "composite_rating": 1.74,
+    "gen1": 1.19,
     "games_played": 1,
     "rank": 31
   },
   {
     "team": "Virginia",
-    "composite_rating": 1.68,
-    "gen1": 1.37,
+    "composite_rating": 1.71,
+    "gen1": 1.44,
     "games_played": 1,
     "rank": 32
   },
   {
-    "team": "Pittsburgh",
-    "composite_rating": 1.59,
-    "gen1": 0.69,
+    "team": "Auburn",
+    "composite_rating": 1.6,
+    "gen1": 2.8,
     "games_played": 1,
     "rank": 33
   },
   {
-    "team": "Auburn",
-    "composite_rating": 1.55,
-    "gen1": 2.68,
+    "team": "Pittsburgh",
+    "composite_rating": 1.6,
+    "gen1": 0.72,
     "games_played": 1,
     "rank": 34
   },
   {
     "team": "Georgia Tech",
-    "composite_rating": 1.44,
-    "gen1": 0.96,
+    "composite_rating": 1.46,
+    "gen1": 1.01,
     "games_played": 1,
     "rank": 35
   },
   {
-    "team": "Memphis",
-    "composite_rating": 1.4,
-    "gen1": 0.4,
-    "games_played": 2,
+    "team": "Clemson",
+    "composite_rating": 1.43,
+    "gen1": 3.61,
+    "games_played": 1,
     "rank": 36
   },
   {
-    "team": "Clemson",
-    "composite_rating": 1.37,
-    "gen1": 3.46,
-    "games_played": 1,
+    "team": "Memphis",
+    "composite_rating": 1.4,
+    "gen1": 0.38,
+    "games_played": 2,
     "rank": 37
   },
   {
     "team": "Kansas State",
-    "composite_rating": 1.35,
-    "gen1": 1.26,
+    "composite_rating": 1.37,
+    "gen1": 1.31,
     "games_played": 0,
     "rank": 38
   },
   {
     "team": "Mississippi State",
-    "composite_rating": 1.32,
-    "gen1": 1.32,
+    "composite_rating": 1.34,
+    "gen1": 1.38,
     "games_played": 1,
     "rank": 39
   },
@@ -281,197 +281,197 @@
   },
   {
     "team": "Houston",
-    "composite_rating": 1.21,
-    "gen1": 1.53,
+    "composite_rating": 1.24,
+    "gen1": 1.6,
     "games_played": 1,
     "rank": 41
   },
   {
     "team": "Wake Forest",
     "composite_rating": 1.21,
-    "gen1": 0.29,
+    "gen1": 0.3,
     "games_played": 1,
     "rank": 42
   },
   {
-    "team": "James Madison",
-    "composite_rating": 1.2,
-    "gen1": -1.22,
+    "team": "South Florida",
+    "composite_rating": 1.19,
+    "gen1": -0.35,
     "games_played": 1,
     "rank": 43
   },
   {
-    "team": "South Florida",
-    "composite_rating": 1.19,
-    "gen1": -0.34,
+    "team": "James Madison",
+    "composite_rating": 1.18,
+    "gen1": -1.27,
     "games_played": 1,
     "rank": 44
   },
   {
     "team": "TCU",
-    "composite_rating": 1.05,
-    "gen1": 1.18,
+    "composite_rating": 1.07,
+    "gen1": 1.24,
     "games_played": 1,
     "rank": 45
   },
   {
     "team": "Cincinnati",
     "composite_rating": 0.85,
-    "gen1": -0.03,
+    "gen1": -0.04,
     "games_played": 1,
     "rank": 46
   },
   {
     "team": "Duke",
-    "composite_rating": 0.83,
-    "gen1": 0.33,
+    "composite_rating": 0.84,
+    "gen1": 0.35,
     "games_played": 1,
     "rank": 47
   },
   {
     "team": "Toledo",
-    "composite_rating": 0.77,
-    "gen1": -2.23,
+    "composite_rating": 0.73,
+    "gen1": -2.33,
     "games_played": 1,
     "rank": 48
   },
   {
     "team": "San Diego State",
-    "composite_rating": 0.71,
-    "gen1": -0.74,
+    "composite_rating": 0.7,
+    "gen1": -0.77,
     "games_played": 0,
     "rank": 49
   },
   {
-    "team": "Tulane",
+    "team": "Kentucky",
     "composite_rating": 0.65,
-    "gen1": -0.53,
-    "games_played": 1,
+    "gen1": 1.59,
+    "games_played": 0,
     "rank": 50
   },
   {
-    "team": "Kentucky",
-    "composite_rating": 0.63,
-    "gen1": 1.52,
-    "games_played": 0,
+    "team": "Tulane",
+    "composite_rating": 0.65,
+    "gen1": -0.56,
+    "games_played": 1,
     "rank": 51
   },
   {
     "team": "Arizona State",
-    "composite_rating": 0.61,
-    "gen1": 0.89,
+    "composite_rating": 0.63,
+    "gen1": 0.94,
     "games_played": 0,
     "rank": 52
   },
   {
-    "team": "Boise State",
-    "composite_rating": 0.59,
-    "gen1": 0.14,
-    "games_played": 1,
+    "team": "Arkansas",
+    "composite_rating": 0.6,
+    "gen1": 1.16,
+    "games_played": 0,
     "rank": 53
   },
   {
-    "team": "Arkansas",
-    "composite_rating": 0.58,
-    "gen1": 1.11,
-    "games_played": 0,
+    "team": "Boise State",
+    "composite_rating": 0.59,
+    "gen1": 0.15,
+    "games_played": 1,
     "rank": 54
   },
   {
     "team": "Iowa State",
-    "composite_rating": 0.58,
-    "gen1": -0.56,
+    "composite_rating": 0.57,
+    "gen1": -0.58,
     "games_played": 0,
     "rank": 55
   },
   {
     "team": "Baylor",
-    "composite_rating": 0.54,
-    "gen1": 0.86,
+    "composite_rating": 0.56,
+    "gen1": 0.9,
     "games_played": 1,
     "rank": 56
   },
   {
     "team": "Northwestern",
-    "composite_rating": 0.53,
-    "gen1": 0.3,
+    "composite_rating": 0.54,
+    "gen1": 0.31,
     "games_played": 0,
     "rank": 57
   },
   {
     "team": "Minnesota",
-    "composite_rating": 0.51,
-    "gen1": 0.82,
+    "composite_rating": 0.52,
+    "gen1": 0.86,
     "games_played": 0,
     "rank": 58
   },
   {
     "team": "Kansas",
-    "composite_rating": 0.33,
-    "gen1": 0.37,
+    "composite_rating": 0.34,
+    "gen1": 0.39,
     "games_played": 0,
     "rank": 59
   },
   {
     "team": "NC State",
-    "composite_rating": 0.28,
-    "gen1": 0.58,
+    "composite_rating": 0.29,
+    "gen1": 0.6,
     "games_played": 1,
     "rank": 60
   },
   {
     "team": "Old Dominion",
-    "composite_rating": 0.22,
-    "gen1": -2.51,
+    "composite_rating": 0.19,
+    "gen1": -2.62,
     "games_played": 0,
     "rank": 61
   },
   {
     "team": "New Mexico",
-    "composite_rating": 0.18,
-    "gen1": -1.43,
+    "composite_rating": 0.16,
+    "gen1": -1.5,
     "games_played": 1,
     "rank": 62
   },
   {
     "team": "UTSA",
-    "composite_rating": 0.18,
-    "gen1": -1.17,
+    "composite_rating": 0.16,
+    "gen1": -1.22,
     "games_played": 0,
     "rank": 63
   },
   {
     "team": "East Carolina",
-    "composite_rating": 0.16,
-    "gen1": -0.93,
+    "composite_rating": 0.14,
+    "gen1": -0.98,
     "games_played": 1,
     "rank": 64
   },
   {
     "team": "North Carolina",
-    "composite_rating": 0.1,
-    "gen1": 1.15,
+    "composite_rating": 0.12,
+    "gen1": 1.2,
     "games_played": 1,
     "rank": 65
   },
   {
     "team": "Maryland",
-    "composite_rating": -0.01,
-    "gen1": 0.53,
+    "composite_rating": 0.0,
+    "gen1": 0.55,
     "games_played": 0,
     "rank": 66
   },
   {
     "team": "UConn",
-    "composite_rating": -0.05,
-    "gen1": -2.69,
+    "composite_rating": -0.09,
+    "gen1": -2.81,
     "games_played": 0,
     "rank": 67
   },
   {
     "team": "North Texas",
-    "composite_rating": -0.07,
-    "gen1": -2.29,
+    "composite_rating": -0.11,
+    "gen1": -2.39,
     "games_played": 1,
     "rank": 68
   },
@@ -484,253 +484,253 @@
   },
   {
     "team": "Washington State",
-    "composite_rating": -0.11,
-    "gen1": -1.34,
+    "composite_rating": -0.13,
+    "gen1": -1.4,
     "games_played": 1,
     "rank": 70
   },
   {
     "team": "Wisconsin",
-    "composite_rating": -0.15,
-    "gen1": 1.04,
+    "composite_rating": -0.13,
+    "gen1": 1.09,
     "games_played": 1,
     "rank": 71
   },
   {
     "team": "UCLA",
-    "composite_rating": -0.19,
-    "gen1": 0.83,
+    "composite_rating": -0.17,
+    "gen1": 0.87,
     "games_played": 1,
     "rank": 72
   },
   {
     "team": "Colorado",
-    "composite_rating": -0.29,
-    "gen1": 0.56,
+    "composite_rating": -0.28,
+    "gen1": 0.59,
     "games_played": 1,
     "rank": 73
   },
   {
     "team": "California",
-    "composite_rating": -0.34,
-    "gen1": 0.52,
+    "composite_rating": -0.33,
+    "gen1": 0.55,
     "games_played": 1,
     "rank": 74
   },
   {
-    "team": "North Dakota State",
+    "team": "Virginia Tech",
     "composite_rating": -0.41,
-    "gen1": -1.78,
-    "games_played": 1,
+    "gen1": 1.95,
+    "games_played": 0,
     "rank": 75
   },
   {
-    "team": "Virginia Tech",
-    "composite_rating": -0.45,
-    "gen1": 1.86,
-    "games_played": 0,
+    "team": "North Dakota State",
+    "composite_rating": -0.44,
+    "gen1": -1.86,
+    "games_played": 1,
     "rank": 76
   },
   {
     "team": "West Virginia",
     "composite_rating": -0.46,
-    "gen1": -0.18,
+    "gen1": -0.19,
     "games_played": 1,
     "rank": 77
-  },
-  {
-    "team": "Rutgers",
-    "composite_rating": -0.47,
-    "gen1": -0.49,
-    "games_played": 1,
-    "rank": 78
   },
   {
     "team": "Michigan State",
     "composite_rating": -0.48,
     "gen1": 0.0,
     "games_played": 1,
+    "rank": 78
+  },
+  {
+    "team": "Rutgers",
+    "composite_rating": -0.48,
+    "gen1": -0.52,
+    "games_played": 1,
     "rank": 79
   },
   {
     "team": "Western Michigan",
-    "composite_rating": -0.55,
-    "gen1": -1.89,
+    "composite_rating": -0.57,
+    "gen1": -1.97,
     "games_played": 1,
     "rank": 80
   },
   {
-    "team": "Utah State",
-    "composite_rating": -0.82,
-    "gen1": -2.82,
-    "games_played": 0,
+    "team": "Texas State",
+    "composite_rating": -0.87,
+    "gen1": -1.29,
+    "games_played": 1,
     "rank": 81
   },
   {
-    "team": "Texas State",
-    "composite_rating": -0.85,
-    "gen1": -1.23,
-    "games_played": 1,
+    "team": "Utah State",
+    "composite_rating": -0.87,
+    "gen1": -2.95,
+    "games_played": 0,
     "rank": 82
   },
   {
     "team": "San Jos\u00e9 State",
-    "composite_rating": -0.86,
-    "gen1": -0.21,
+    "composite_rating": -0.9,
+    "gen1": -0.33,
     "games_played": 2,
     "rank": 83
   },
   {
-    "team": "Navy",
-    "composite_rating": -1.0,
-    "gen1": -4.38,
-    "games_played": 0,
+    "team": "Ohio",
+    "composite_rating": -1.05,
+    "gen1": -3.15,
+    "games_played": 1,
     "rank": 84
   },
   {
-    "team": "Ohio",
-    "composite_rating": -1.0,
-    "gen1": -3.02,
-    "games_played": 1,
+    "team": "Navy",
+    "composite_rating": -1.07,
+    "gen1": -4.58,
+    "games_played": 0,
     "rank": 85
   },
   {
     "team": "Troy",
-    "composite_rating": -1.09,
-    "gen1": -2.15,
+    "composite_rating": -1.13,
+    "gen1": -2.25,
     "games_played": 1,
     "rank": 86
   },
   {
     "team": "Kennesaw State",
-    "composite_rating": -1.15,
-    "gen1": -3.45,
+    "composite_rating": -1.21,
+    "gen1": -3.61,
     "games_played": 0,
     "rank": 87
   },
   {
-    "team": "Louisiana Tech",
-    "composite_rating": -1.22,
-    "gen1": -3.21,
+    "team": "Purdue",
+    "composite_rating": -1.24,
+    "gen1": -0.56,
     "games_played": 0,
     "rank": 88
   },
   {
-    "team": "Purdue",
-    "composite_rating": -1.23,
-    "gen1": -0.53,
+    "team": "Louisiana Tech",
+    "composite_rating": -1.27,
+    "gen1": -3.36,
     "games_played": 0,
     "rank": 89
   },
   {
-    "team": "Miami (OH)",
-    "composite_rating": -1.26,
-    "gen1": -1.64,
-    "games_played": 1,
+    "team": "Stanford",
+    "composite_rating": -1.27,
+    "gen1": -0.74,
+    "games_played": 2,
     "rank": 90
   },
   {
-    "team": "Stanford",
-    "composite_rating": -1.26,
-    "gen1": -0.71,
-    "games_played": 2,
+    "team": "Miami (OH)",
+    "composite_rating": -1.28,
+    "gen1": -1.71,
+    "games_played": 1,
     "rank": 91
   },
   {
     "team": "Liberty",
-    "composite_rating": -1.28,
-    "gen1": -1.71,
+    "composite_rating": -1.31,
+    "gen1": -1.79,
     "games_played": 1,
     "rank": 92
   },
   {
     "team": "Western Kentucky",
-    "composite_rating": -1.29,
-    "gen1": -1.77,
+    "composite_rating": -1.31,
+    "gen1": -1.85,
     "games_played": 1,
     "rank": 93
   },
   {
     "team": "Tulsa",
-    "composite_rating": -1.34,
-    "gen1": -1.95,
+    "composite_rating": -1.37,
+    "gen1": -2.04,
     "games_played": 1,
     "rank": 94
   },
   {
     "team": "Fresno State",
-    "composite_rating": -1.39,
-    "gen1": -3.16,
+    "composite_rating": -1.41,
+    "gen1": -3.23,
     "games_played": 1,
     "rank": 95
   },
   {
     "team": "Army",
-    "composite_rating": -1.54,
-    "gen1": -4.27,
+    "composite_rating": -1.61,
+    "gen1": -4.46,
     "games_played": 0,
     "rank": 96
   },
   {
     "team": "Southern Miss",
-    "composite_rating": -1.58,
-    "gen1": -3.24,
+    "composite_rating": -1.63,
+    "gen1": -3.38,
     "games_played": 0,
     "rank": 97
   },
   {
     "team": "Oregon State",
-    "composite_rating": -1.66,
-    "gen1": -1.75,
+    "composite_rating": -1.69,
+    "gen1": -1.82,
     "games_played": 1,
     "rank": 98
   },
   {
-    "team": "Nevada",
-    "composite_rating": -1.7,
-    "gen1": -3.16,
+    "team": "Oklahoma State",
+    "composite_rating": -1.72,
+    "gen1": 0.46,
     "games_played": 1,
     "rank": 99
   },
   {
-    "team": "Florida International",
-    "composite_rating": -1.71,
-    "gen1": -3.0,
+    "team": "Nevada",
+    "composite_rating": -1.75,
+    "gen1": -3.3,
     "games_played": 1,
     "rank": 100
   },
   {
     "team": "Colorado State",
-    "composite_rating": -1.72,
-    "gen1": -2.52,
+    "composite_rating": -1.76,
+    "gen1": -2.64,
     "games_played": 1,
     "rank": 101
   },
   {
-    "team": "Oklahoma State",
-    "composite_rating": -1.73,
-    "gen1": 0.44,
+    "team": "Florida International",
+    "composite_rating": -1.76,
+    "gen1": -3.13,
     "games_played": 1,
     "rank": 102
   },
   {
     "team": "Jacksonville State",
-    "composite_rating": -1.76,
-    "gen1": -2.67,
+    "composite_rating": -1.8,
+    "gen1": -2.79,
     "games_played": 1,
     "rank": 103
   },
   {
     "team": "Boston College",
-    "composite_rating": -1.9,
-    "gen1": -0.87,
+    "composite_rating": -1.91,
+    "gen1": -0.91,
     "games_played": 1,
     "rank": 104
   },
   {
     "team": "Buffalo",
-    "composite_rating": -1.94,
-    "gen1": -3.76,
+    "composite_rating": -2.0,
+    "gen1": -3.93,
     "games_played": 0,
     "rank": 105
   },
@@ -743,225 +743,225 @@
   },
   {
     "team": "Louisiana",
-    "composite_rating": -2.04,
-    "gen1": -2.81,
+    "composite_rating": -2.09,
+    "gen1": -2.93,
     "games_played": 0,
     "rank": 107
   },
   {
     "team": "Central Michigan",
-    "composite_rating": -2.07,
-    "gen1": -3.56,
+    "composite_rating": -2.12,
+    "gen1": -3.72,
     "games_played": 1,
     "rank": 108
   },
   {
     "team": "Marshall",
-    "composite_rating": -2.09,
-    "gen1": -2.3,
+    "composite_rating": -2.12,
+    "gen1": -2.4,
     "games_played": 1,
     "rank": 109
   },
   {
     "team": "Georgia Southern",
-    "composite_rating": -2.1,
-    "gen1": -2.5,
+    "composite_rating": -2.13,
+    "gen1": -2.62,
     "games_played": 0,
     "rank": 110
   },
   {
-    "team": "Wyoming",
-    "composite_rating": -2.17,
-    "gen1": -3.35,
-    "games_played": 1,
+    "team": "App State",
+    "composite_rating": -2.23,
+    "gen1": -3.0,
+    "games_played": 0,
     "rank": 111
   },
   {
-    "team": "Sacramento State",
-    "composite_rating": -2.18,
-    "gen1": -5.58,
-    "games_played": 1,
+    "team": "Temple",
+    "composite_rating": -2.23,
+    "gen1": -2.48,
+    "games_played": 0,
     "rank": 112
   },
   {
-    "team": "App State",
-    "composite_rating": -2.19,
-    "gen1": -2.87,
-    "games_played": 0,
+    "team": "Wyoming",
+    "composite_rating": -2.23,
+    "gen1": -3.5,
+    "games_played": 1,
     "rank": 113
   },
   {
-    "team": "Temple",
-    "composite_rating": -2.2,
-    "gen1": -2.38,
-    "games_played": 0,
+    "team": "Sacramento State",
+    "composite_rating": -2.25,
+    "gen1": -5.79,
+    "games_played": 1,
     "rank": 114
   },
   {
     "team": "Air Force",
-    "composite_rating": -2.3,
-    "gen1": -4.72,
+    "composite_rating": -2.38,
+    "gen1": -4.93,
     "games_played": 0,
     "rank": 115
   },
   {
     "team": "Delaware",
-    "composite_rating": -2.32,
-    "gen1": -3.53,
+    "composite_rating": -2.38,
+    "gen1": -3.69,
     "games_played": 0,
     "rank": 116
   },
   {
     "team": "Arkansas State",
-    "composite_rating": -2.35,
-    "gen1": -3.45,
+    "composite_rating": -2.39,
+    "gen1": -3.56,
     "games_played": 1,
     "rank": 117
   },
   {
     "team": "Bowling Green",
-    "composite_rating": -2.4,
-    "gen1": -3.9,
+    "composite_rating": -2.46,
+    "gen1": -4.08,
     "games_played": 0,
     "rank": 118
   },
   {
     "team": "Coastal Carolina",
-    "composite_rating": -2.52,
-    "gen1": -3.22,
+    "composite_rating": -2.57,
+    "gen1": -3.36,
     "games_played": 1,
     "rank": 119
   },
   {
     "team": "Hawai'i",
-    "composite_rating": -2.65,
-    "gen1": -6.1,
+    "composite_rating": -2.67,
+    "gen1": -6.17,
     "games_played": 2,
     "rank": 120
   },
   {
     "team": "South Alabama",
-    "composite_rating": -2.67,
-    "gen1": -3.51,
+    "composite_rating": -2.73,
+    "gen1": -3.67,
     "games_played": 0,
     "rank": 121
   },
   {
     "team": "Northern Illinois",
-    "composite_rating": -2.7,
-    "gen1": -3.89,
+    "composite_rating": -2.76,
+    "gen1": -4.06,
     "games_played": 1,
     "rank": 122
   },
   {
     "team": "Akron",
-    "composite_rating": -2.76,
-    "gen1": -4.43,
+    "composite_rating": -2.83,
+    "gen1": -4.63,
     "games_played": 1,
     "rank": 123
   },
   {
-    "team": "New Mexico State",
-    "composite_rating": -2.8,
-    "gen1": -4.5,
-    "games_played": 1,
+    "team": "Eastern Michigan",
+    "composite_rating": -2.91,
+    "gen1": -5.98,
+    "games_played": 2,
     "rank": 124
   },
   {
-    "team": "Eastern Michigan",
-    "composite_rating": -2.86,
-    "gen1": -5.84,
-    "games_played": 2,
+    "team": "Florida Atlantic",
+    "composite_rating": -2.96,
+    "gen1": -2.48,
+    "games_played": 1,
     "rank": 125
   },
   {
     "team": "Middle Tennessee",
-    "composite_rating": -2.88,
-    "gen1": -5.08,
+    "composite_rating": -2.96,
+    "gen1": -5.31,
     "games_played": 0,
     "rank": 126
   },
   {
-    "team": "Florida Atlantic",
-    "composite_rating": -2.93,
-    "gen1": -2.37,
-    "games_played": 1,
+    "team": "Rice",
+    "composite_rating": -3.12,
+    "gen1": -3.89,
+    "games_played": 0,
     "rank": 127
   },
   {
-    "team": "Rice",
-    "composite_rating": -3.06,
-    "gen1": -3.72,
-    "games_played": 0,
+    "team": "UAB",
+    "composite_rating": -3.18,
+    "gen1": -3.55,
+    "games_played": 1,
     "rank": 128
   },
   {
-    "team": "UAB",
-    "composite_rating": -3.13,
-    "gen1": -3.39,
+    "team": "New Mexico State",
+    "composite_rating": -3.33,
+    "gen1": -5.95,
     "games_played": 1,
     "rank": 129
   },
   {
     "team": "Missouri State",
-    "composite_rating": -3.33,
-    "gen1": -3.56,
+    "composite_rating": -3.38,
+    "gen1": -3.72,
     "games_played": 1,
     "rank": 130
   },
   {
     "team": "UTEP",
-    "composite_rating": -3.49,
-    "gen1": -4.09,
+    "composite_rating": -3.56,
+    "gen1": -4.27,
     "games_played": 1,
     "rank": 131
   },
   {
     "team": "Kent State",
-    "composite_rating": -4.15,
-    "gen1": -4.66,
+    "composite_rating": -4.22,
+    "gen1": -4.87,
     "games_played": 1,
     "rank": 132
   },
   {
     "team": "Ball State",
-    "composite_rating": -4.41,
-    "gen1": -4.51,
+    "composite_rating": -4.48,
+    "gen1": -4.71,
     "games_played": 1,
     "rank": 133
   },
   {
     "team": "Georgia State",
-    "composite_rating": -4.42,
-    "gen1": -4.95,
+    "composite_rating": -4.5,
+    "gen1": -5.17,
     "games_played": 0,
     "rank": 134
   },
   {
     "team": "UL Monroe",
-    "composite_rating": -4.45,
-    "gen1": -5.39,
+    "composite_rating": -4.53,
+    "gen1": -5.63,
     "games_played": 1,
     "rank": 135
   },
   {
     "team": "Charlotte",
-    "composite_rating": -4.54,
-    "gen1": -4.69,
+    "composite_rating": -4.61,
+    "gen1": -4.9,
     "games_played": 0,
     "rank": 136
   },
   {
     "team": "Sam Houston",
-    "composite_rating": -4.55,
-    "gen1": -4.74,
+    "composite_rating": -4.63,
+    "gen1": -4.96,
     "games_played": 1,
     "rank": 137
   },
   {
     "team": "Massachusetts",
-    "composite_rating": -4.82,
-    "gen1": -4.81,
+    "composite_rating": -4.89,
+    "gen1": -5.03,
     "games_played": 1,
     "rank": 138
   }

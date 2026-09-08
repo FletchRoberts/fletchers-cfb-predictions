@@ -916,11 +916,11 @@
       "favorite": "Florida State",
       "vegas_spread": -3.0,
       "vegas_total": 52.75,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 24,
+      "actual_away_score": 27,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": true
     }
   ]
 }
