@@ -16,9 +16,9 @@
       "favorite": "Rutgers",
       "vegas_spread": null,
       "vegas_total": null,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
+      "actual_home_score": 28,
+      "actual_away_score": 21,
+      "graded": true,
       "ats_correct": null,
       "ou_correct": null
     },
@@ -34,11 +34,11 @@
       "favorite": "Missouri",
       "vegas_spread": -7.0,
       "vegas_total": 53.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 21,
+      "actual_away_score": 38,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": true
     },
     {
       "game_id": 401858221,
