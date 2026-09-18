@@ -16,9 +16,9 @@
       "favorite": "Pittsburgh",
       "vegas_spread": null,
       "vegas_total": null,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
+      "actual_home_score": 27,
+      "actual_away_score": 13,
+      "graded": true,
       "ats_correct": null,
       "ou_correct": null
     },
