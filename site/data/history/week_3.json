@@ -34,9 +34,9 @@
       "favorite": "Miami",
       "vegas_spread": null,
       "vegas_total": null,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
+      "actual_home_score": 20,
+      "actual_away_score": 33,
+      "graded": true,
       "ats_correct": null,
       "ou_correct": null
     },
@@ -52,10 +52,10 @@
       "favorite": "Texas Tech",
       "vegas_spread": 13.5,
       "vegas_total": null,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
+      "actual_home_score": 28,
+      "actual_away_score": 26,
+      "graded": true,
+      "ats_correct": true,
       "ou_correct": null
     },
     {
