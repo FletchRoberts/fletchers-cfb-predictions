@@ -1,7 +1,7 @@
 [
   {
     "team": "Ohio State",
-    "composite_rating": 21.1,
+    "composite_rating": 21.11,
     "gen1": 45.0,
     "games_played": 3,
     "rank": 1
@@ -14,31 +14,31 @@
     "rank": 2
   },
   {
+    "team": "Texas",
+    "composite_rating": 18.16,
+    "gen1": 44.99,
+    "games_played": 3,
+    "rank": 3
+  },
+  {
     "team": "Georgia",
     "composite_rating": 17.89,
     "gen1": 40.88,
     "games_played": 2,
-    "rank": 3
+    "rank": 4
   },
   {
-    "team": "Texas",
-    "composite_rating": 17.89,
-    "gen1": 44.99,
-    "games_played": 3,
-    "rank": 4
+    "team": "Indiana",
+    "composite_rating": 15.14,
+    "gen1": 31.07,
+    "games_played": 2,
+    "rank": 5
   },
   {
     "team": "Alabama",
     "composite_rating": 14.86,
     "gen1": 35.04,
     "games_played": 3,
-    "rank": 5
-  },
-  {
-    "team": "Indiana",
-    "composite_rating": 14.64,
-    "gen1": 31.07,
-    "games_played": 2,
     "rank": 6
   },
   {
@@ -351,7 +351,7 @@
   },
   {
     "team": "Cincinnati",
-    "composite_rating": 1.95,
+    "composite_rating": 1.93,
     "gen1": 2.99,
     "games_played": 2,
     "rank": 51
@@ -393,7 +393,7 @@
   },
   {
     "team": "UTSA",
-    "composite_rating": 0.61,
+    "composite_rating": 0.56,
     "gen1": 0.87,
     "games_played": 2,
     "rank": 57
@@ -442,7 +442,7 @@
   },
   {
     "team": "NC State",
-    "composite_rating": -0.18,
+    "composite_rating": -0.33,
     "gen1": 0.6,
     "games_played": 2,
     "rank": 64
@@ -533,7 +533,7 @@
   },
   {
     "team": "Kansas",
-    "composite_rating": -1.35,
+    "composite_rating": -1.4,
     "gen1": -3.85,
     "games_played": 2,
     "rank": 77
@@ -764,7 +764,7 @@
   },
   {
     "team": "Middle Tennessee",
-    "composite_rating": -6.62,
+    "composite_rating": -6.65,
     "gen1": -16.06,
     "games_played": 2,
     "rank": 110
@@ -848,7 +848,7 @@
   },
   {
     "team": "Central Michigan",
-    "composite_rating": -8.27,
+    "composite_rating": -8.26,
     "gen1": -20.72,
     "games_played": 2,
     "rank": 122
@@ -911,7 +911,7 @@
   },
   {
     "team": "Wyoming",
-    "composite_rating": -9.94,
+    "composite_rating": -9.9,
     "gen1": -24.39,
     "games_played": 2,
     "rank": 131
@@ -953,7 +953,7 @@
   },
   {
     "team": "Kent State",
-    "composite_rating": -11.64,
+    "composite_rating": -11.68,
     "gen1": -23.42,
     "games_played": 2,
     "rank": 137
