@@ -16,9 +16,9 @@
       "favorite": "Liberty",
       "vegas_spread": null,
       "vegas_total": null,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
+      "actual_home_score": 17,
+      "actual_away_score": 34,
+      "graded": true,
       "ats_correct": null,
       "ou_correct": null
     },
