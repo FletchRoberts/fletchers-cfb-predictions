@@ -50,7 +50,7 @@
   },
   {
     "team": "Ole Miss",
-    "composite_rating": 11.33,
+    "composite_rating": 11.3,
     "gen1": 24.21,
     "games_played": 6,
     "rank": 8
@@ -141,7 +141,7 @@
   },
   {
     "team": "Missouri",
-    "composite_rating": 7.32,
+    "composite_rating": 7.34,
     "gen1": 17.45,
     "games_played": 6,
     "rank": 21
@@ -295,7 +295,7 @@
   },
   {
     "team": "Oklahoma State",
-    "composite_rating": 3.81,
+    "composite_rating": 3.86,
     "gen1": 11.15,
     "games_played": 5,
     "rank": 43
@@ -379,7 +379,7 @@
   },
   {
     "team": "Kansas",
-    "composite_rating": 1.89,
+    "composite_rating": 1.83,
     "gen1": 3.44,
     "games_played": 5,
     "rank": 55
@@ -442,7 +442,7 @@
   },
   {
     "team": "Texas State",
-    "composite_rating": 0.58,
+    "composite_rating": 0.57,
     "gen1": -0.55,
     "games_played": 5,
     "rank": 64
@@ -470,7 +470,7 @@
   },
   {
     "team": "Army",
-    "composite_rating": -0.15,
+    "composite_rating": -0.18,
     "gen1": -3.27,
     "games_played": 5,
     "rank": 68
@@ -602,17 +602,17 @@
     "rank": 86
   },
   {
-    "team": "Georgia Southern",
-    "composite_rating": -2.29,
-    "gen1": -5.85,
-    "games_played": 6,
-    "rank": 87
-  },
-  {
     "team": "Boston College",
     "composite_rating": -2.3,
     "gen1": -4.38,
     "games_played": 5,
+    "rank": 87
+  },
+  {
+    "team": "Georgia Southern",
+    "composite_rating": -2.32,
+    "gen1": -5.85,
+    "games_played": 6,
     "rank": 88
   },
   {
@@ -631,7 +631,7 @@
   },
   {
     "team": "California",
-    "composite_rating": -3.16,
+    "composite_rating": -3.15,
     "gen1": -4.52,
     "games_played": 6,
     "rank": 91
@@ -666,7 +666,7 @@
   },
   {
     "team": "Navy",
-    "composite_rating": -3.53,
+    "composite_rating": -3.6,
     "gen1": -11.6,
     "games_played": 5,
     "rank": 96
@@ -701,7 +701,7 @@
   },
   {
     "team": "Arkansas State",
-    "composite_rating": -4.41,
+    "composite_rating": -4.36,
     "gen1": -10.66,
     "games_played": 6,
     "rank": 101
@@ -715,14 +715,14 @@
   },
   {
     "team": "Florida Atlantic",
-    "composite_rating": -4.68,
+    "composite_rating": -4.66,
     "gen1": -10.3,
     "games_played": 5,
     "rank": 103
   },
   {
     "team": "UAB",
-    "composite_rating": -4.89,
+    "composite_rating": -4.88,
     "gen1": -11.72,
     "games_played": 6,
     "rank": 104
@@ -757,7 +757,7 @@
   },
   {
     "team": "San Jos\u00e9 State",
-    "composite_rating": -5.73,
+    "composite_rating": -5.75,
     "gen1": -14.76,
     "games_played": 6,
     "rank": 109
@@ -868,24 +868,24 @@
     "rank": 124
   },
   {
-    "team": "Southern Miss",
-    "composite_rating": -8.7,
-    "gen1": -20.4,
-    "games_played": 5,
-    "rank": 125
-  },
-  {
     "team": "Old Dominion",
     "composite_rating": -8.72,
     "gen1": -18.13,
     "games_played": 6,
-    "rank": 126
+    "rank": 125
   },
   {
     "team": "Bowling Green",
     "composite_rating": -8.75,
     "gen1": -20.13,
     "games_played": 6,
+    "rank": 126
+  },
+  {
+    "team": "Southern Miss",
+    "composite_rating": -8.81,
+    "gen1": -20.4,
+    "games_played": 5,
     "rank": 127
   },
   {
