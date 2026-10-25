@@ -1,11 +1,11 @@
 {
-  "games_graded": 400,
-  "win_accuracy_pct": 70.2,
-  "avg_margin_error": 13.87,
-  "avg_total_error": 12.9,
-  "ats_games_graded": 82,
-  "ats_win_pct": 47.6,
-  "ou_games_graded": 81,
-  "ou_win_pct": 45.7,
-  "updated_at": "2026-10-24 12:17:04 UTC"
+  "games_graded": 444,
+  "win_accuracy_pct": 69.8,
+  "avg_margin_error": 13.7,
+  "avg_total_error": 13.17,
+  "ats_games_graded": 86,
+  "ats_win_pct": 50.0,
+  "ou_games_graded": 85,
+  "ou_win_pct": 47.1,
+  "updated_at": "2026-10-25 12:48:29 UTC"
 }
