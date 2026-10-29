@@ -1,11 +1,11 @@
 {
-  "games_graded": 446,
-  "win_accuracy_pct": 69.5,
-  "avg_margin_error": 13.72,
-  "avg_total_error": 13.16,
+  "games_graded": 448,
+  "win_accuracy_pct": 69.6,
+  "avg_margin_error": 13.74,
+  "avg_total_error": 13.21,
   "ats_games_graded": 86,
   "ats_win_pct": 50.0,
   "ou_games_graded": 85,
   "ou_win_pct": 47.1,
-  "updated_at": "2026-10-28 14:34:58 UTC"
+  "updated_at": "2026-10-29 14:42:20 UTC"
 }
