@@ -141,7 +141,7 @@
   },
   {
     "team": "Louisville",
-    "composite_rating": 7.48,
+    "composite_rating": 7.47,
     "gen1": 15.34,
     "games_played": 8,
     "rank": 21
@@ -246,7 +246,7 @@
   },
   {
     "team": "New Mexico",
-    "composite_rating": 6.04,
+    "composite_rating": 6.03,
     "gen1": 9.44,
     "games_played": 8,
     "rank": 36
@@ -267,7 +267,7 @@
   },
   {
     "team": "Mississippi State",
-    "composite_rating": 4.59,
+    "composite_rating": 4.58,
     "gen1": 13.91,
     "games_played": 9,
     "rank": 39
@@ -617,7 +617,7 @@
   },
   {
     "team": "Ohio",
-    "composite_rating": -3.06,
+    "composite_rating": -3.07,
     "gen1": -10.99,
     "games_played": 8,
     "rank": 89
@@ -764,8 +764,8 @@
   },
   {
     "team": "Buffalo",
-    "composite_rating": -5.86,
-    "gen1": -14.46,
+    "composite_rating": -5.85,
+    "gen1": -14.43,
     "games_played": 7,
     "rank": 110
   },
@@ -820,14 +820,14 @@
   },
   {
     "team": "Massachusetts",
-    "composite_rating": -7.31,
-    "gen1": -18.46,
+    "composite_rating": -7.28,
+    "gen1": -18.39,
     "games_played": 7,
     "rank": 118
   },
   {
     "team": "Middle Tennessee",
-    "composite_rating": -8.05,
+    "composite_rating": -8.06,
     "gen1": -19.24,
     "games_played": 8,
     "rank": 119
@@ -883,7 +883,7 @@
   },
   {
     "team": "Missouri State",
-    "composite_rating": -9.62,
+    "composite_rating": -9.63,
     "gen1": -21.63,
     "games_played": 8,
     "rank": 127
