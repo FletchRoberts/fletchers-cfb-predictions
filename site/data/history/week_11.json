@@ -430,11 +430,11 @@
       "favorite": "Ole Miss",
       "vegas_spread": 4.0,
       "vegas_total": 53.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 24,
+      "actual_away_score": 17,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": true
     },
     {
       "game_id": 401856862,
