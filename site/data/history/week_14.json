@@ -1,0 +1,62 @@
+{
+  "week": 14,
+  "season": 2026,
+  "snapshotted_at": "2026-11-22 15:44:23 UTC",
+  "finalized": false,
+  "games": [
+    {
+      "game_id": 401869535,
+      "home": "Liberty",
+      "away": "Jacksonville State",
+      "start_date": "2026-12-05T00:00:00.000Z",
+      "predicted_home_score": 31.9,
+      "predicted_away_score": 18.4,
+      "predicted_spread": 13.5,
+      "predicted_total": 50.4,
+      "favorite": "Liberty",
+      "vegas_spread": null,
+      "vegas_total": null,
+      "actual_home_score": null,
+      "actual_away_score": null,
+      "graded": false,
+      "ats_correct": null,
+      "ou_correct": null
+    },
+    {
+      "game_id": 401869542,
+      "home": "Boise State",
+      "away": "San Diego State",
+      "start_date": "2026-12-05T01:00:00.000Z",
+      "predicted_home_score": 34.7,
+      "predicted_away_score": 20.6,
+      "predicted_spread": 14.0,
+      "predicted_total": 55.3,
+      "favorite": "Boise State",
+      "vegas_spread": null,
+      "vegas_total": null,
+      "actual_home_score": null,
+      "actual_away_score": null,
+      "graded": false,
+      "ats_correct": null,
+      "ou_correct": null
+    },
+    {
+      "game_id": 401858318,
+      "home": "Miami",
+      "away": "Wake Forest",
+      "start_date": "2026-12-05T17:00:00.000Z",
+      "predicted_home_score": 31.8,
+      "predicted_away_score": 26.0,
+      "predicted_spread": 5.7,
+      "predicted_total": 57.8,
+      "favorite": "Miami",
+      "vegas_spread": null,
+      "vegas_total": null,
+      "actual_home_score": null,
+      "actual_away_score": null,
+      "graded": false,
+      "ats_correct": null,
+      "ou_correct": null
+    }
+  ]
+}
