@@ -52,11 +52,11 @@
       "favorite": "Texas Tech",
       "vegas_spread": 16.5,
       "vegas_total": 55.5,
-      "actual_home_score": null,
-      "actual_away_score": null,
-      "graded": false,
-      "ats_correct": null,
-      "ou_correct": null
+      "actual_home_score": 48,
+      "actual_away_score": 27,
+      "graded": true,
+      "ats_correct": false,
+      "ou_correct": false
     },
     {
       "game_id": 401856762,
